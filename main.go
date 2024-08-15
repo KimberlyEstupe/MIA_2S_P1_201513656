@@ -1,16 +1,14 @@
 package main
 
 import (
-	Comandos "MIA_2S_P1_201513656/Comandos"
-	DISK 	"MIA_2S_P1_201513656/Comandos/AdminDiscos"
+	AD "MIA_2S_P1_201513656/Comandos/AdminDiscos"
+	//"admindiscos"
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
-	
 )
 
-//DISK 	"./Comandos/AdminDiscos"
 
 func main() {
 	reader :=bufio.NewScanner(os.Stdin)
@@ -27,21 +25,40 @@ func Analizar(entrada string){
 
 	// ------------------------------  Administracion de discos---------------------
 	if strings.ToLower(parametros[0])=="mkdisk"{
-		if len(parametros)>1{
-			
-			DISK.mkdisk(parametros)
+		if len(parametros)>1{			
+			//DISK.mkdisk(parametros)
+			AD.Mkdisk(parametros)
 		}else{
 			fmt.Println("ERROR EN MKDISK")
 		}
-	}else if strings.ToLower(parametros[0])=="rmdisk"{
-		fmt.Println("rmdisk") 
-	}else if strings.ToLower(parametros[0])=="fdisk"{
-		fmt.Println("fdisk")
-	}else if strings.ToLower(parametros[0])=="rmdisk"{
-		fmt.Println("rmdisk")
-	}else if strings.ToLower(parametros[0])=="mount"{
-		fmt.Println("rmdisk")
-	}else if strings.ToLower(parametros[0])=="unmount"{
-		fmt.Println("rmdisk")
+
+	}else if strings.ToLower(parametros[0])=="rmdisk"{		
+		if len(parametros)>1{			
+			fmt.Println("rmdisk")
+		}else{
+			fmt.Println("rmdisk") 
+		}
+
+	}else if strings.ToLower(parametros[0])=="fdisk"{		
+		if len(parametros)>1{			
+			fmt.Println("fdisk")
+		}else{
+			fmt.Println("ERROR EN MKDISK")
+		}
+
+	}else if strings.ToLower(parametros[0])=="mount"{		
+		if len(parametros)>1{			
+			fmt.Println("mount")
+		}else{
+			fmt.Println("ERROR EN MKDISK")
+		}
+
+	}else if strings.ToLower(parametros[0])=="unmount"{		
+		if len(parametros)>1{			
+			fmt.Println("unmount")
+		}else{
+			fmt.Println("ERROR EN MKDISK")
+		}
+
 	}
 }
