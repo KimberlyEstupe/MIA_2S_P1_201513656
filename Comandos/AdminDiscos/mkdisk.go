@@ -1,9 +1,11 @@
-package admindiscos
+package Admindiscos
 
 import (
+	"MIA_2S_P1_201513656/Herramientas"
+	//"MIA_2S_P1_201513656/Structs"
 	"fmt"	
 	"strconv"
-	"strings"
+	"strings"	
 )
 
 
@@ -11,11 +13,14 @@ import (
 func Mkdisk(entrada []string) {
 
 	var size int	//Obligatorio	
-	fit :="FF"		//Puede ser FF, BF, WF
-	unit := 1048576	//PUede ser megas(1048576) o kilos (1024)
+	var pathE string		//Obligatorio
+	fit :="F"		//Puede ser FF, BF, WF, por default es FF
+	unit := 1048576	//PUede ser megas(1048576) o kilos (1024), por default es megas
 	Valido := true	//Valida los parametros correcto
 	InitSize := false	//Valida el ingreso del parametro size
+	InitPath := false
 
+	fmt.Println(fit)
 
 	/*
 	Se recorren todos los parametros
@@ -51,11 +56,15 @@ func Mkdisk(entrada []string) {
 				break
 			}
 
-		
-
 		//********************  Fit *****************
 		}else if strings.ToLower(valores[0])=="fit"{
-			fmt.Println("Fit: ", valores[1])
+			if strings.ToLower(valores[0])=="bf"{
+				fit = "B"
+			}else if strings.ToLower(valores[0])=="wf"{
+				fit = "W"
+			}else if strings.ToLower(valores[0])!="ff"{
+				fmt.Println("EEROR: PARAMETRO FIT INCORRECTO. VALORES ACEPTADO: FF, BF,WF. SE INGRESO: ",valores[1])
+			}			
 		
 		//*************** UNIT ***********************
 		} else if strings.ToLower(valores[0]) == "unit" {
@@ -69,8 +78,12 @@ func Mkdisk(entrada []string) {
 				Valido = false
 				break
 			}
+
 		//******************* PATH *************
 		} else if strings.ToLower(valores[0]) == "path" {
+			pathE = strings.ReplaceAll(valores[1],"\"","")
+			InitPath = true
+			
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
@@ -78,14 +91,33 @@ func Mkdisk(entrada []string) {
 			break //por si en el camino reconoce algo invalido de una vez se sale
 		}
 	}
-
-	fmt.Println(fit,", ",unit)
-
 	
-
 	if Valido{
 		if InitSize{
-			fmt.Println("Esta inicializado")
+			if InitPath{
+				tam := size * unit
+				// Create file
+				fmt.Println("El archivo ", pathE," fue creado correctamente")
+				err := Herramientas.CrearDisco(pathE)
+				if err != nil {
+					fmt.Println("MKDISK Error: ", err)
+				}
+				// Open bin file
+				file, err := Herramientas.OpenFile(pathE)
+				if err != nil {
+					return
+				}
+
+				datos := make([]byte, tam)
+				newErr := Herramientas.WriteObject(file, datos, 0)
+				if newErr != nil {
+					fmt.Println("MKDISK Error: ", newErr)
+					return
+				}
+
+			}else{
+				fmt.Println("ERROR: Debe ingresar el parametro Path")
+			}
 		}else{
 			fmt.Println("ERROR: Debe ingresar el parametro Size")
 		}
