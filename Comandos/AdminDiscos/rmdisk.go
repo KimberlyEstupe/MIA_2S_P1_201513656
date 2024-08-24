@@ -6,13 +6,11 @@ import (
 	"strings"
 )
 
-
 func Rmdisk(entrada []string){
 	//Quitar espacios en blanco
 	tmp := strings.TrimRight(entrada[1],"")
 	valores := strings.Split(tmp,"=")
 	var path string
-
 
 	if len(valores)!=2{
 		fmt.Println("ERROR RMDISK, valor desconocido de parametros ",valores[1])

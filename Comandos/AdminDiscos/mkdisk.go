@@ -2,17 +2,17 @@ package Admindiscos
 
 import (
 	"MIA_2S_P1_201513656/Herramientas"
-	//"MIA_2S_P1_201513656/Structs"
-	"fmt"	
+	"MIA_2S_P1_201513656/Structs"
+	"fmt"
 	"strconv"
-	"strings"	
+	"strings"
+	"time"
 )
-
 
 //recibe los parametros de mkdisk
 func Mkdisk(entrada []string) {
 
-	var size int	//Obligatorio	
+	var size int			//Obligatorio	
 	var pathE string		//Obligatorio
 	fit :="F"		//Puede ser FF, BF, WF, por default es FF
 	unit := 1048576	//PUede ser megas(1048576) o kilos (1024), por default es megas
@@ -97,7 +97,6 @@ func Mkdisk(entrada []string) {
 			if InitPath{
 				tam := size * unit
 				// Create file
-				fmt.Println("El archivo ", pathE," fue creado correctamente")
 				err := Herramientas.CrearDisco(pathE)
 				if err != nil {
 					fmt.Println("MKDISK Error: ", err)
@@ -114,6 +113,44 @@ func Mkdisk(entrada []string) {
 					fmt.Println("MKDISK Error: ", newErr)
 					return
 				}
+
+				//obtener hora para el id
+			ahora := time.Now()
+			//obtener los segundos y minutos
+			segundos := ahora.Second()
+			minutos := ahora.Minute()
+			//concateno los segundos y minutos como una cadena (de 4 digitos)
+			cad := fmt.Sprintf("%02d%02d", segundos, minutos)
+			//convierto la cadena a numero en un id temporal
+			idTmp, err := strconv.Atoi(cad)
+			if err != nil {
+				fmt.Println("MKDISK Error: no converti fecha en entero para id")
+			}
+			//fmt.Println("id guardado actual ", idTmp)
+			// Create a new instance of MBR
+			var newMBR Structs.MBR
+			newMBR.MbrSize = int32(tam)
+			newMBR.Id = int32(idTmp)
+			copy(newMBR.Fit[:], fit)
+			copy(newMBR.FechaC[:], ahora.Format("02/01/2006 15:04"))
+			// Write object in bin file
+			if err := Herramientas.WriteObject(file, newMBR, 0); err != nil {
+				return
+			}
+
+			// Close bin file
+			defer file.Close()
+
+			fmt.Println("\n Se creo el disco de forma exitosa")
+
+			//imprimir el disco creado para validar que todo este correcto
+			var TempMBR Structs.MBR
+			if err := Herramientas.ReadObject(file, &TempMBR, 0); err != nil {
+				return
+			}
+			Structs.PrintMBR(TempMBR)
+
+			fmt.Println("\n======End MKDISK======")
 
 			}else{
 				fmt.Println("ERROR: Debe ingresar el parametro Path")

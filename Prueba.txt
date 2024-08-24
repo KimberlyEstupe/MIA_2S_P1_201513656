@@ -1,8 +1,19 @@
 #mkdisk
 mkdisk -Size=3000 -unit=K -path=Resultados/Discos/Disco1.mia
 mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
-mkdisk -size=5 -unit=M -path="Resultados/DiscosDisco3.mia"
+mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
 mkdisk -size=10 -path="Resultados/Discos/Disco4.mia"
 
 #rmdisk
 rmdisk -path="Resultados/Discos/Disco4.mia"
+
+#Fdisk
+fdisk -Size=300 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Particion1
+fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=Particion2 -size=300
+fdisk -size=1 -type=L -unit=M -fit=WF -path="Resultados/Discos/Disco3.mia"-name="Particion3"
+fdisk -type=E -path=Resultados/Discos/Disco2.dk -name=Part3 -Unit=K -size=200
+
+mount -path=Resultados/Discos/Disco2.mia -name=Part2 #id=341A
+mount -path=Resultados/Discosme/Disco2.mia -name=Part1 #id=342A
+mount -path=Resultados/Discos/Disco1.mia -name=Part3 #id=341B
+mount -path=Resultados/Discos/Disco3.mia -name=Part2 #id=341C
