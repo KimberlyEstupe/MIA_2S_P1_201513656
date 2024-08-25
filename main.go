@@ -75,6 +75,8 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("\n*********************************************************************************************")
 				fmt.Println("Linea en ejecucion: ", linea[0])
 				respuesta += Analizar(linea[0]) + "\n"
+			}else{
+				respuesta += linea[1]
 			}
 		}
 
