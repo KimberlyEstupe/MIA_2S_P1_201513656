@@ -9,6 +9,12 @@ export default function Comandos({newIp="localhost"}){
         setTextValue(event.target.value);
     };
 
+    const Prueba = (event) => {
+        //setTextValue(event.target.value);
+        console.log("PRUEBA ",textValue)
+        setTextExit(textValue + "salida")
+    };
+
     const sendData = async (e) => {
         e.preventDefault();
         const data = {
@@ -30,7 +36,9 @@ export default function Comandos({newIp="localhost"}){
     
             const responseData = await response.json();
             console.log('Respuesta del servidor:', responseData);
-            alert("Comandos ejecutados")
+            console.log('Respuesta del metodo ',responseData.message)
+            setTextExit(responseData.message)
+           
         } catch (error) {
             console.error('Error:', error);
         }
