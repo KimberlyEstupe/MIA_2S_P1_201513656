@@ -1,5 +1,9 @@
+git add .
+git commit -m "comentario"
+git push origin main
+
 #mkdisk
-mkdisk -Size=3000 -unit=K -path=Resultados/Discos/Disco5.mia
+mkdisk -Size=3000 -unit=K -path=Resultados/Discos/Disco1.mia
 mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
 mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
 mkdisk -size=10 -path="Resultados/Discos/Disco4.mia"

@@ -9,12 +9,6 @@ export default function Comandos({newIp="localhost"}){
         setTextValue(event.target.value);
     };
 
-    const Prueba = (event) => {
-        //setTextValue(event.target.value);
-        console.log("PRUEBA ",textValue)
-        setTextExit(textValue + "salida")
-    };
-
     const sendData = async (e) => {
         e.preventDefault();
         const data = {
@@ -50,27 +44,28 @@ export default function Comandos({newIp="localhost"}){
             <div id="espacio">&nbsp;&nbsp;&nbsp;</div>
             <table>
                 <tbody>
+
+                    <tr><td><p><strong>ENTRADA</strong></p></td></tr>
+
                     <tr>
                         <td>
                             <textarea
                                 className='entrada'
                                 value={textValue}
                                 onChange={handleTextChange}
-                                cols="80"
-                                rows="30"
                                 placeholder='Ingrese comandos'
                                 id='inputComands'
                             />
                         </td>
                     </tr>
 
+                    <tr><td><strong><p>SALIDA</p></strong></td></tr>
+
                     <tr>
                         <td>
                             <textarea
-                                className='salida'
+                                className='entrada'
                                 value={textExit}
-                                cols="80"
-                                rows="30"
                                 id='inputComands'
                             />
                         </td>

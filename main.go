@@ -11,8 +11,6 @@ y agregarlos a las importaciones
 
 import (
 	AD "MIA_2S_P1_201513656/Comandos/AdminDiscos"
-	"MIA_2S_P1_201513656/Herramientas"
-	"MIA_2S_P1_201513656/Structs"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -33,6 +31,7 @@ type StatusResponse struct {
 
 
 func main() {
+	//EndPoint 
 	http.HandleFunc("/analizar", getCadenaAnalizar)
 
 	// Configurar CORS con opciones predeterminadas
@@ -74,9 +73,11 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 			if len(linea[0]) != 0 {
 				fmt.Println("\n*********************************************************************************************")
 				fmt.Println("Linea en ejecucion: ", linea[0])
+				respuesta += "*------------------------------------------------------------------------------------------*\n"
+				respuesta += "Linea en ejecucion: " + linea[0] + "\n"
 				respuesta += Analizar(linea[0]) + "\n"
 			}else{
-				respuesta += linea[1]
+				respuesta += "#"+linea[1] +"\n"
 			}
 		}
 
@@ -101,8 +102,7 @@ func Analizar(entrada string) string{
 
 	// *============================* ADMINISTRACION DE DISCOS *============================*
 	if strings.ToLower(parametros[0])=="mkdisk"{
-		if len(parametros)>1{			
-			//DISK.mkdisk(parametros)			
+		if len(parametros)>1{					
 			respuesta = AD.Mkdisk(parametros)
 		}else{
 			fmt.Println("ERROR EN MKDISK, FALTAN PARAMETROS EN MKDISK")
@@ -110,21 +110,21 @@ func Analizar(entrada string) string{
 
 	}else if strings.ToLower(parametros[0])=="rmdisk"{		
 		if len(parametros)>1{			
-			AD.Rmdisk(parametros)
+			respuesta = AD.Rmdisk(parametros)
 		}else{
 			fmt.Println("ERROR RMDISK EN RMDISK, FALTAN PARAMETROS EN RMDISK") 
 		}
 
 	}else if strings.ToLower(parametros[0])=="fdisk"{		
 		if len(parametros)>1{			
-			//AD.Fdisk(parametros)
+			respuesta = AD.Fdisk(parametros)
 		}else{
 			fmt.Println("ERROR EN FDISK, FALTAN PARAMETROS EN FDISK")
 		}
 
 	}else if strings.ToLower(parametros[0])=="mount"{		
 		if len(parametros)>1{			
-			//AD.Mount(parametros)
+			AD.Mount(parametros)
 		}else{
 			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
 		}
@@ -135,25 +135,12 @@ func Analizar(entrada string) string{
 		}else{
 			fmt.Println("ERROR EN UNMOUNT, FALTAN PARAMETROS EN UNMOUNT")
 		}
-	// ---------------------------- HT2 -------------------
-	}else if strings.ToLower(parametros[0])=="rep"{	
-		file, err := Herramientas.OpenFile("Resultados/Discos/Disco.mia")
-				if err != nil {
-					return "ERROR"
-				}
-
-		var TempMBR Structs.MBR
-			if err := Herramientas.ReadObject(file, &TempMBR, 0); err != nil {
-				return "ERROR"
-			}
-			Structs.PrintMBR(TempMBR)
-		
-		respuesta = "REPORTE CREADO"
 
 	// *============================* OTROS *============================*
 
 	} else if strings.ToLower(parametros[0]) == "" {
 		//para agregar lineas con cada enter sin tomarlo como error
+		return ""
 	} else {
 		fmt.Println("Comando no reconocible")
 		return "ERROR: COMANDO NO RECONOCIBLE"
