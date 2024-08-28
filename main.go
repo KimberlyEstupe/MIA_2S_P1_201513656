@@ -80,9 +80,9 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 					respuesta += "Linea en ejecucion: " + linea[0] + "\n"
 					respuesta += Analizar(linea[0]) + "\n"
 				}				
-				/*if len(linea[1]) != 0 {
+				if len(linea[1]) > 0 {
 					respuesta += "#"+linea[1] +"\n"
-				}*/
+				}
 			}
 			
 		}

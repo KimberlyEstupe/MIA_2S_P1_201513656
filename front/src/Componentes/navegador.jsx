@@ -9,9 +9,11 @@ export default function Comandos({newIp="localhost"}){
         setTextValue(event.target.value);
     };
 
+
+    //Limpiar las consolas 
     const handlerLimpiar = () => {
-        setTextValue("");
-        setTextExit("");
+        setTextValue(""); //COnsola entreada
+        setTextExit("");  //COnsola salida
     }
 
     const sendData = async (e) => {
