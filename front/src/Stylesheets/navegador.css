@@ -34,3 +34,7 @@ p{
     justify-content:center;
     gap: 5px; /* Espacio entre los elementos flexibles */
 }
+
+button{
+    margin: 5px
+}

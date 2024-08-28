@@ -1,6 +1,6 @@
-git add .
-git commit -m "comentario"
-git push origin main
+#git add .
+#git commit -m "comentario"
+#git push origin main
 
 #mkdisk
 mkdisk -Size=3000 -unit=K -path=Resultados/Discos/Disco1.mia

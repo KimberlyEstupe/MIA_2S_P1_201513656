@@ -9,6 +9,11 @@ export default function Comandos({newIp="localhost"}){
         setTextValue(event.target.value);
     };
 
+    const handlerLimpiar = () => {
+        setTextValue("");
+        setTextExit("");
+    }
+
     const sendData = async (e) => {
         e.preventDefault();
         const data = {
@@ -37,6 +42,23 @@ export default function Comandos({newIp="localhost"}){
             console.error('Error:', error);
         }
 
+    }
+
+    const handleLoadClick = () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.addEventListener("change",handleFileChange);
+        input.click();
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const text = e.target.result;
+            setTextValue(text);
+        }
+        reader.readAsText(file);
     }
 
     return(
@@ -73,7 +95,11 @@ export default function Comandos({newIp="localhost"}){
 
                     <tr>
                         <td style={{textAlign:'center'}}>
-                            <button type="button" className="btn btn-primary" onClick={(e) => sendData(e)}>Ejecutar</button>
+                            <div className="botones">
+                                <button type="button" className="btn btn-primary" onClick={(e) => sendData(e)}>Ejecutar</button>
+                                <button type="button" className="btn btn-primary" onClick={(e) => handlerLimpiar(e)}>Limpiar consolas</button>
+                                <button type="button" className="btn btn-primary" onClick={(e) => handleLoadClick(e)}>Subir archivo</button>
+                            </div> 
                         </td>
                     </tr>
                 </tbody>
