@@ -11,6 +11,7 @@ y agregarlos a las importaciones
 
 import (
 	AD "MIA_2S_P1_201513656/Comandos/AdminDiscos"
+	Rep "MIA_2S_P1_201513656/Comandos/Rep"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -68,17 +69,22 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 		lector := bufio.NewScanner(strings.NewReader(entrada.Text))
 		//leer el archivo linea por linea
 		for lector.Scan() {
-			//Divido por # para ignorar todo lo que este a la derecha del mismo
-			linea := strings.Split(lector.Text(), "#") //lector.Text() retorna la linea leida
-			if len(linea[0]) != 0 {
-				fmt.Println("\n*********************************************************************************************")
-				fmt.Println("Linea en ejecucion: ", linea[0])
-				respuesta += "*------------------------------------------------------------------------------------------*\n"
-				respuesta += "Linea en ejecucion: " + linea[0] + "\n"
-				respuesta += Analizar(linea[0]) + "\n"
-			}else{
-				respuesta += "#"+linea[1] +"\n"
+			//Elimina los saltos de linea
+			if lector.Text() != ""{
+				//Divido por # para ignorar todo lo que este a la derecha del mismo
+				linea := strings.Split(lector.Text(), "#") //lector.Text() retorna la linea leida
+				if len(linea[0]) != 0 {
+					fmt.Println("\n*********************************************************************************************")
+					fmt.Println("Linea en ejecucion: ", linea[0])
+					respuesta += "*------------------------------------------------------------------------------------------*\n"
+					respuesta += "Linea en ejecucion: " + linea[0] + "\n"
+					respuesta += Analizar(linea[0]) + "\n"
+				}				
+				/*if len(linea[1]) != 0 {
+					respuesta += "#"+linea[1] +"\n"
+				}*/
 			}
+			
 		}
 
 		//fmt.Println("Cadena recibida ", entrada.Text)
@@ -96,7 +102,7 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 
 
 func Analizar(entrada string) string{
-	respuesta := "Respuesta"
+	respuesta := "Respuesta vacia"
 	//Recibe una linea y la descompone entre el comando y sus parametros
 	parametros:= strings.Split(entrada, " -")
 
@@ -124,7 +130,7 @@ func Analizar(entrada string) string{
 
 	}else if strings.ToLower(parametros[0])=="mount"{		
 		if len(parametros)>1{			
-			AD.Mount(parametros)
+			respuesta = AD.Mount(parametros)
 		}else{
 			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
 		}
@@ -137,6 +143,13 @@ func Analizar(entrada string) string{
 		}
 
 	// *============================* OTROS *============================*
+	} else if strings.ToLower(parametros[0]) == "rep" {
+		//REP
+		if len(parametros) > 1 {
+			respuesta = Rep.Rep(parametros)
+		} else {
+			fmt.Println("REP ERROR: parametros no encontrados")
+		}
 
 	} else if strings.ToLower(parametros[0]) == "" {
 		//para agregar lineas con cada enter sin tomarlo como error
