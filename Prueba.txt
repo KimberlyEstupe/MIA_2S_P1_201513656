@@ -8,20 +8,28 @@ mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
 mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
 mkdisk -size=10 -path="Resultados/Discos/Disco4.mia"
 
-#rmdisk
-rmdisk -path="Resultados/Discos/Disco4.mia"
-
 #Fdisk
-fdisk -Size=300 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Particion1
-fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=Particion2 -size=300
-fdisk -size=1 -type=L -unit=M -fit=WF -path="Resultados/Discos/Disco3.mia" -name="Particion3"
-fdisk -type=E -path=Resultados/Discos/Disco2.mia -name=Part3 -Unit=K -size=200
+fdisk -Size=300 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
+fdisk -Size=400 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par2
+fdisk -Size=200 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Particion8
 
-fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=Part3 -size=100
+fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par3 -size=300
+fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par2 -size=90
+fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par4 -size=80
+fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=Part5 -size=100
+fdisk -type=E -path=Resultados/Discos/Disco3.mia -name=Part8 -Unit=K -size=200
+fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco4.mia -name=Par1
+fdisk -type=P -path=Resultados/Discos/Disco3.mia -name=Part9 -Unit=K -size=100
+fdisk -Size=100 -path=Resultados/Discos/Disco4.mia -name=Par10
+fdisk -Size=150 -path=Resultados/Discos/Disco4.mia -name=Par11 -type=E
 
-mount -path=Resultados/Discos/Disco2.mia -name=Part3 #id=341A
-mount -path=Resultados/Discos/Disco2.mia -name=Part8 #id=341A
-mount -path=Resultados/Discos/Disco1.mia -name=Particion1 #id=341A
+mount -path=Resultados/Discos/Disco3.mia -name=Part9
+mount -path=Resultados/Discos/Disco4.mia -name=Par10
+mount -path=Resultados/Discos/Disco2.mia -name=Par5
+mount -path=Resultados/Discos/Disco1.mia -name=Par2
+mount -path=Resultados/Discos/Disco1.mia -name=Par1
+mount -path=Resultados/Discos/Disco4.mia -name=Par1
+mount -path=Resultados/Discos/Disco1.mia -name=Particion8
 
 
 #REPOSTES

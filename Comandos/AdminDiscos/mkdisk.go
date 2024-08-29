@@ -4,6 +4,7 @@ import (
 	"MIA_2S_P1_201513656/Herramientas"
 	"MIA_2S_P1_201513656/Structs"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -117,11 +118,16 @@ func Mkdisk(entrada []string) string{
 				//obtener hora para el id
 			ahora := time.Now()
 			//obtener los segundos y minutos
-			segundos := ahora.Second()
+			//segundos := ahora.Second()
 			minutos := ahora.Minute()
+
+			//genera un numero aleario de 1 a 100
+			rand.Seed(time.Now().Unix())
+			num := rand.Intn(100)
+
 			//concateno los segundos y minutos como una cadena (de 4 digitos)
-			cad := fmt.Sprintf("%02d%02d", segundos, minutos)
-			//convierto la cadena a numero en un id temporal
+			cad := fmt.Sprintf("%02d%02d", num, minutos)
+			//convierto la cadena a numero en un id temporal			
 			idTmp, err := strconv.Atoi(cad)
 			if err != nil {
 				fmt.Println("MKDISK Error: no converti fecha en entero para id")

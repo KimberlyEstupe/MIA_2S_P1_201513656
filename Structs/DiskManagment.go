@@ -108,7 +108,7 @@ func (e *EBR) GetEnd() int32 {
 
 // ==================================== mount ====================================
 type Mount struct{
-	Id     int32
+	MPath  string
 	Letter [1]byte
 	Cont   int32 
 }
@@ -117,8 +117,8 @@ type Mount struct{
 	fmt.Println("Id:  %d,  Letra:  %s, Cont: %d\n", data.Id, string(data.Letter[:]), data.Cont)
 }*/
 
-func GetIdMount (data Mount) int32{
-	return data.Id
+func GetIdMount (data Mount) string{
+	return data.MPath
 }
 
 /* ===============================================================================================

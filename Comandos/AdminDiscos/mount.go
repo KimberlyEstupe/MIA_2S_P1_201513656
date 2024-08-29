@@ -7,12 +7,19 @@ import (
 	"os"
 	"strings"
 )
-
-func Mount(entrada []string) string {
+var mount []Structs.Mount
+func Mount(entrada []string) (string){
 	var respuesta string
 	var name string
 	var pathE string
 	Valido := true
+
+	Pmonta := "Resultados/Discos/"
+	_, err := os.Stat(Pmonta)
+	if os.IsNotExist(err) {
+		Valido = false
+	}
+
 	for _, parametro := range entrada[1:] {
 		tmp := strings.TrimRight(parametro,"")
 		valores := strings.Split(tmp,"=")
@@ -75,46 +82,37 @@ func Mount(entrada []string) string {
 						if string(mbr.Partitions[i].Status[:]) != "A" {
 							if string(mbr.Partitions[i].Type[:]) != "E" {
 								//COMIENZO PARA MONTAR
-								Structs.PrintMBR(mbr)
-								IdMbr := Structs.GetIdMBR(mbr)
-								fmt.Println(IdMbr)
-
-								mount := make([]Structs.Mount, 0)//Creamos un slice para contener los datos de los discos montados
-								InitMount := false
-								cont :=1
 								
-								//Si el slice no esta vacio, buscamos si ya existe el disco
 								if len(mount) > 0{
+									var nuevaLetra [1]byte
+									contador :=0
+									
 									for _,montado := range mount{
-										fmt.Println("Id: ",montado.Id, ", cont: ", montado.Cont, ", Letra: ", montado.Letter)
-										if montado.Id ==IdMbr{
-											InitMount = true										
+										if montado.MPath ==pathE{
+											nuevaLetra = montado.Letter	
+											contador = int(montado.Cont)	
+											contador++							
 											break 
 										}
 									}
 
-									if InitMount{
-										fmt.Println("Existe")
+									if contador!=0{		
+										fmt.Println("existe")								
+										ultima := nuevaLetra[0]
+										mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(contador)})
 									}else{
 										nuevaLetra := mount[len(mount)-1].Letter
 										ultima := nuevaLetra[0]
-										ultima++									
-									
-										mount = append(mount, Structs.Mount{Id: int32(IdMbr),Letter: [1]byte{ultima},Cont: int32(cont)})								
+										ultima++	
+										mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(1)})																
 									}
 								//Si el slice esta vacio sera el primer dato en agregar
 								}else{
-									mount = append(mount, Structs.Mount{Id: int32(IdMbr),Letter: [1]byte{'A'},Cont: int32(cont)})
-									nuevaLetra := mount[len(mount)-1].Letter
-									ultima := nuevaLetra[0]
-									ultima++									
-									
-									mount = append(mount, Structs.Mount{Id: int32(IdMbr),Letter: [1]byte{ultima},Cont: int32(cont)})
-									respuesta+="Se monto la particion, sin agregar a Disco"
+									mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{'A'},Cont: int32(1)})									
 								}
+								respuesta+="Agregar al contador de particiones montadas"
+								fmt.Println("Agregar a contador de parciones montadas")
 
-								for _,montado := range mount{
-									fmt.Println("Id: ",montado.Id, ", cont: ", montado.Cont, ", Letra: ", string(montado.Letter[:]))}
 											
 							}else{
 								fmt.Println("MOUNT Error. No se puede montar una particion extendida")
@@ -143,6 +141,10 @@ func Mount(entrada []string) string {
 			fmt.Println("ERROR: FALTA PARAMETRO PATH EN MOUNT")
 			respuesta += "ERROR: FALTA PATH EN MOUNT"	
 		}
+	}
+
+	for _,montado := range mount{
+		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter[:])," Contador: ",montado.Cont)
 	}
 
 	return respuesta

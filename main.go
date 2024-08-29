@@ -53,7 +53,7 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 	var respuesta string
 	// Configurar la cabecera de respuesta
 	w.Header().Set("Content-Type", "application/json")
-
+	
 	var status StatusResponse
 	//verificar que sea un post
 	if r.Method == http.MethodPost {
@@ -64,7 +64,7 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(status)
 			return
 		}
-
+		
 		//creo un lector de bufer para el archivo
 		lector := bufio.NewScanner(strings.NewReader(entrada.Text))
 		//leer el archivo linea por linea
@@ -78,11 +78,11 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Linea en ejecucion: ", linea[0])
 					respuesta += "*------------------------------------------------------------------------------------------*\n"
 					respuesta += "Linea en ejecucion: " + linea[0] + "\n"
-					respuesta += Analizar(linea[0]) + "\n"
+					respuesta += Analizar(linea[0])  + "\n"
 				}				
-				if len(linea[1]) > 0 {
+				/*if len(linea[1]) > 0 {
 					respuesta += "#"+linea[1] +"\n"
-				}
+				}*/
 			}
 			
 		}
@@ -101,7 +101,7 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func Analizar(entrada string) string{
+func Analizar(entrada string) (string){
 	respuesta := "Respuesta vacia"
 	//Recibe una linea y la descompone entre el comando y sus parametros
 	parametros:= strings.Split(entrada, " -")
@@ -131,11 +131,12 @@ func Analizar(entrada string) string{
 	}else if strings.ToLower(parametros[0])=="mount"{		
 		if len(parametros)>1{			
 			respuesta = AD.Mount(parametros)
+			
 		}else{
 			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
 		}
 
-	}else if strings.ToLower(parametros[0])=="unmount"{		
+	}else if strings.ToLower(parametros[0])=="otros"{		
 		if len(parametros)>1{			
 			fmt.Println("unmount")
 		}else{
@@ -159,6 +160,5 @@ func Analizar(entrada string) string{
 		return "ERROR: COMANDO NO RECONOCIBLE"
 	}
 
-	return respuesta
-	
+	return respuesta	
 }
