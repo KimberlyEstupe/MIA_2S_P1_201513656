@@ -1,6 +1,7 @@
 package rep
 
 import (
+	Admindiscos "MIA_2S_P1_201513656/Comandos/AdminDiscos"
 	"MIA_2S_P1_201513656/Herramientas"
 	"MIA_2S_P1_201513656/Structs"
 	"fmt"
@@ -32,7 +33,7 @@ func Rep(entrada []string) string{
 			// Eliminar comillas
 			path = strings.ReplaceAll(valores[1], "\"", "")
 		} else if strings.ToLower(valores[0]) == "id" {
-			id = valores[1]
+			id = strings.ToUpper(valores[1])
 		} else if strings.ToLower(valores[0]) == "ruta" {
 			//rutaFile = strings.ToLower(tmp[1])
 		} else {
@@ -67,38 +68,56 @@ func Rep(entrada []string) string{
 //---------------------- MBR ---------------------
 func Rmbr (path string, id string) string{
 	var Respuesta string
-	tmp := strings.Split(path, "/")
-	nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+	var pathDico string
+	Valido := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Admindiscos.Pmontaje{
+		if montado.Id == id{
+			fmt.Println("Encotrado ", montado.MPath)
+			pathDico = montado.MPath
+			Valido = true
+		}
+	}
+
+	if Valido{
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+		
+		file, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			Respuesta += "ERROR REP MBR Open "+ err.Error()		
+		}
+
+		var mbr Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
+			Respuesta += "ERROR REP MBR Read "+ err.Error()		
+		}
+
+		// Close bin file
+		defer file.Close()
+
+		//Crea reporte
+		cad := "digraph { \nnode [ shape=none ] \nTablaReportNodo [ label = < <table border=\"1\"> \n"
+		cad += " <tr>\n  <td bgcolor='SlateBlue' COLSPAN=\"2\"> Reporte MBR </td> \n </tr> \n"
+		cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> mbr_tamano </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", mbr.MbrSize)
+		cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#AFA1D1'> mbr_fecha_creacion </td> \n  <td bgcolor='#AFA1D1'> %s </td> \n </tr> \n", string(mbr.FechaC[:]))
+		cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> mbr_disk_signature </td> \n  <td bgcolor='Azure'> %d </td> \n </tr>  \n", mbr.Id)
+		cad += Structs.RepGraphviz(mbr, file)
+		cad += "</table> > ]\n}"
+
+		carpeta := filepath.Dir(path)
+		rutaReporte := carpeta + "/" + nombre + ".dot"
+
+		Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
+
+		Respuesta += "Reporte de MBR/EBR ejecutado"
+	}else{
+		Respuesta += "ERROR: EL ID INGRESADO NO EXISTE"
+	}
+
 	
-	file, err := Herramientas.OpenFile("Resultados/Discos/"+id)
-	if err != nil {
-		Respuesta += "ERROR REP MBR Open "+ err.Error()		
-	}
-
-	var mbr Structs.MBR
-	// Read object from bin file
-	if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-		Respuesta += "ERROR REP MBR Read "+ err.Error()		
-	}
-
-	// Close bin file
-	defer file.Close()
-
-	//Crea reporte
-	cad := "digraph { \nnode [ shape=none ] \nTablaReportNodo [ label = < <table border=\"1\"> \n"
-	cad += " <tr>\n  <td bgcolor='SlateBlue' COLSPAN=\"2\"> Reporte MBR </td> \n </tr> \n"
-	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> mbr_tamano </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", mbr.MbrSize)
-	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#AFA1D1'> mbr_fecha_creacion </td> \n  <td bgcolor='#AFA1D1'> %s </td> \n </tr> \n", string(mbr.FechaC[:]))
-	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> mbr_disk_signature </td> \n  <td bgcolor='Azure'> %d </td> \n </tr>  \n", mbr.Id)
-	cad += Structs.RepGraphviz(mbr, file)
-	cad += "</table> > ]\n}"
-
-	carpeta := filepath.Dir(path)
-	rutaReporte := carpeta + "/" + nombre + ".dot"
-
-	Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
-
-	Respuesta += "Reporte de MBR/EBR ejecutado"
 	return Respuesta
 }
 

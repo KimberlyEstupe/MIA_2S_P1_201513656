@@ -5,20 +5,16 @@ import (
 	"MIA_2S_P1_201513656/Structs"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
-var mount []Structs.Mount
+
+var Pmontaje []Structs.Mount//GUarda en Ram las particones montadas
 func Mount(entrada []string) (string){
 	var respuesta string
 	var name string
 	var pathE string
 	Valido := true
-
-	Pmonta := "Resultados/Discos/"
-	_, err := os.Stat(Pmonta)
-	if os.IsNotExist(err) {
-		Valido = false
-	}
 
 	for _, parametro := range entrada[1:] {
 		tmp := strings.TrimRight(parametro,"")
@@ -74,7 +70,7 @@ func Mount(entrada []string) (string){
 				}				
 
 				montar := true //usar si se van a montar logicas
-				//reportar := false
+				reportar := false
 				for i := 0; i < 4; i++ {
 					nombre := Structs.GetName(string(mbr.Partitions[i].Name[:]))
 					if nombre == name{
@@ -83,11 +79,16 @@ func Mount(entrada []string) (string){
 							if string(mbr.Partitions[i].Type[:]) != "E" {
 								//COMIENZO PARA MONTAR
 								
-								if len(mount) > 0{
+								var id string
+								var ultima byte // ultima letra a agregar
+								ultima = 65 // A
+								contador :=0 //Cantidad de particiones montadas
+
+								if len(Pmontaje) > 0{
 									var nuevaLetra [1]byte
-									contador :=0
 									
-									for _,montado := range mount{
+									
+									for _,montado := range Pmontaje{
 										if montado.MPath ==pathE{
 											nuevaLetra = montado.Letter	
 											contador = int(montado.Cont)	
@@ -96,22 +97,35 @@ func Mount(entrada []string) (string){
 										}
 									}
 
-									if contador!=0{		
-										fmt.Println("existe")								
-										ultima := nuevaLetra[0]
-										mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(contador)})
+									if contador!=0{									
+										ultima = nuevaLetra[0]
 									}else{
-										nuevaLetra := mount[len(mount)-1].Letter
-										ultima := nuevaLetra[0]
+										nuevaLetra := Pmontaje[len(Pmontaje)-1].Letter
+										ultima = nuevaLetra[0]
 										ultima++	
-										mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(1)})																
+										contador++																
 									}
 								//Si el slice esta vacio sera el primer dato en agregar
 								}else{
-									mount = append(mount, Structs.Mount{MPath: pathE ,Letter: [1]byte{'A'},Cont: int32(1)})									
+									contador++																		
 								}
-								respuesta+="Agregar al contador de particiones montadas"
-								fmt.Println("Agregar a contador de parciones montadas")
+
+								id = "56"+strconv.Itoa(contador)+string(ultima) //Id de particion
+								//ingresar al struck de particiones montadas
+								Pmontaje = append(Pmontaje, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(contador), Id: id})
+
+								//modificar la particion que se va a montar
+								copy(mbr.Partitions[i].Status[:], "A")
+								copy(mbr.Partitions[i].Id[:], id)
+
+								//sobreescribir el mbr para guardar los cambios
+								if err := Herramientas.WriteObject(disco, mbr, 0); err != nil { //Sobre escribir el mbr
+									respuesta += "Error "
+								}
+								reportar = true
+
+								respuesta+="Particion con nombre "+ name+ " montada correctamente. ID: "+id
+								fmt.Println("Particion con nombre ", name, " montada correctamente. ID: ",id)
 
 											
 							}else{
@@ -123,16 +137,25 @@ func Mount(entrada []string) (string){
 					}
 				}
 
+				// cerrar el archivo del disco
+				defer disco.Close()
+
 				if montar {
 					fmt.Println("MOUNT Error. No se pudo montar la particion ", name)
 					fmt.Println("MOUNT Error. No se encontro la particion")
 					respuesta += "MOUNT Error. NO SE ENCONTRO LA PARTICION " + name
 					respuesta += "\nNO SE PUDO MONTAR LA PARICION \n"
 				}
-				
 
-				// cerrar el archivo del disco
-				defer disco.Close()
+				if reportar {
+					fmt.Println("\nLISTA DE PARTICIONES MONTADAS\n ")
+					for i := 0; i < 4; i++ {
+						estado := string(mbr.Partitions[i].Status[:])
+						if estado == "A" {
+							fmt.Printf("Partition %d: name: %s, status: %s, id: %s, tipo: %s, start: %d, size: %d, fit: %s, correlativo: %d\n", i, string(mbr.Partitions[i].Name[:]), string(mbr.Partitions[i].Status[:]), string(mbr.Partitions[i].Id[:]), string(mbr.Partitions[i].Type[:]), mbr.Partitions[i].Start, mbr.Partitions[i].Size, string(mbr.Partitions[i].Fit[:]), mbr.Partitions[i].Correlative)
+						}
+					}
+				}
 			}else{
 				fmt.Println("ERROR: FALTA NAME  EN MOUNT")	
 				respuesta += "ERROR: FALTA NAME  EN MOUNT"			
@@ -143,8 +166,8 @@ func Mount(entrada []string) (string){
 		}
 	}
 
-	for _,montado := range mount{
-		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter[:])," Contador: ",montado.Cont)
+	for _,montado := range Pmontaje{
+		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter[:])," Contador: ",montado.Cont, " Id: ", montado.Id)
 	}
 
 	return respuesta

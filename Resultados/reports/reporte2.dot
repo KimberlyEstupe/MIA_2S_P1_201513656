@@ -6,7 +6,7 @@ TablaReportNodo [ label = < <table border="1">
  </tr> 
  <tr>
   <td bgcolor='Azure'> mbr_tamano </td> 
-  <td bgcolor='Azure'> 3072000 </td> 
+  <td bgcolor='Azure'> 10485760 </td> 
  </tr> 
  <tr>
   <td bgcolor='#AFA1D1'> mbr_fecha_creacion </td> 
@@ -16,6 +16,68 @@ TablaReportNodo [ label = < <table border="1">
   <td bgcolor='Azure'> mbr_disk_signature </td> 
   <td bgcolor='Azure'> 9536 </td> 
  </tr>  
+ <tr>
+  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_status </td> 
+  <td bgcolor='Azure'> A </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_type </td> 
+  <td bgcolor='LightSkyBlue'> P </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_fit </td> 
+  <td bgcolor='Azure'> W </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_start </td> 
+  <td bgcolor='LightSkyBlue'> 165 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_size </td> 
+  <td bgcolor='Azure'> 102400 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_name </td> 
+  <td bgcolor='LightSkyBlue'> Par1 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_id </td> 
+  <td bgcolor='Azure'> 562B </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_status </td> 
+  <td bgcolor='Azure'> A </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_type </td> 
+  <td bgcolor='LightSkyBlue'> P </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_fit </td> 
+  <td bgcolor='Azure'> W </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_start </td> 
+  <td bgcolor='LightSkyBlue'> 102565 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_size </td> 
+  <td bgcolor='Azure'> 102400 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_name </td> 
+  <td bgcolor='LightSkyBlue'> Par10 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_id </td> 
+  <td bgcolor='Azure'> 561B </td> 
+ </tr> 
  <tr>
   <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
  </tr> 
@@ -33,107 +95,22 @@ TablaReportNodo [ label = < <table border="1">
  </tr> 
  <tr>
   <td bgcolor='LightSkyBlue'> part_start </td> 
-  <td bgcolor='LightSkyBlue'> 165 </td> 
+  <td bgcolor='LightSkyBlue'> 204965 </td> 
  </tr> 
  <tr>
   <td bgcolor='Azure'> part_size </td> 
-  <td bgcolor='Azure'> 307200 </td> 
+  <td bgcolor='Azure'> 153600 </td> 
  </tr> 
  <tr>
   <td bgcolor='LightSkyBlue'> part_name </td> 
-  <td bgcolor='LightSkyBlue'> Par3 </td> 
+  <td bgcolor='LightSkyBlue'> Par11 </td> 
  </tr> 
  <tr>
   <td bgcolor='Azure'> part_id </td> 
   <td bgcolor='Azure'> - </td> 
  </tr> 
  <tr>
-  <td bgcolor='SteelBlue' COLSPAN="2"> PARTICION LOGICA </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_status </td> 
-  <td bgcolor='Azure'> I </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_next </td> 
-  <td bgcolor='SkyBlue'> 92356 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_fit </td> 
-  <td bgcolor='Azure'> W </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_start </td> 
-  <td bgcolor='SkyBlue'> 165 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_size </td> 
-  <td bgcolor='Azure'> 92160 </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_name </td> 
-  <td bgcolor='SkyBlue'> Par2 </td> 
- </tr> 
- <tr>
-  <td bgcolor='SteelBlue' COLSPAN="2"> PARTICION LOGICA </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_status </td> 
-  <td bgcolor='Azure'> I </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_next </td> 
-  <td bgcolor='SkyBlue'> -1 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_fit </td> 
-  <td bgcolor='Azure'> W </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_start </td> 
-  <td bgcolor='SkyBlue'> 92356 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_size </td> 
-  <td bgcolor='Azure'> 81920 </td> 
- </tr> 
- <tr>
-  <td bgcolor='SkyBlue'> part_name </td> 
-  <td bgcolor='SkyBlue'> Par4 </td> 
- </tr> 
- <tr>
-  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_status </td> 
-  <td bgcolor='Azure'> I </td> 
- </tr> 
- <tr>
-  <td bgcolor='LightSkyBlue'> part_type </td> 
-  <td bgcolor='LightSkyBlue'> P </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_fit </td> 
-  <td bgcolor='Azure'> W </td> 
- </tr> 
- <tr>
-  <td bgcolor='LightSkyBlue'> part_start </td> 
-  <td bgcolor='LightSkyBlue'> 307365 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_size </td> 
-  <td bgcolor='Azure'> 102400 </td> 
- </tr> 
- <tr>
-  <td bgcolor='LightSkyBlue'> part_name </td> 
-  <td bgcolor='LightSkyBlue'> Part5 </td> 
- </tr> 
- <tr>
-  <td bgcolor='Azure'> part_id </td> 
-  <td bgcolor='Azure'> - </td> 
- </tr> 
- <tr>
-  <td bgcolor='#808080' COLSPAN="2"> ESPACIO LIBRE <br/> 2662235 bytes </td> 
+  <td bgcolor='#808080' COLSPAN="2"> ESPACIO LIBRE <br/> 10127195 bytes </td> 
  </tr> 
 </table> > ]
 }

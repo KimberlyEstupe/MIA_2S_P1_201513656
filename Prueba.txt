@@ -33,5 +33,6 @@ mount -path=Resultados/Discos/Disco1.mia -name=Particion8
 
 
 #REPOSTES
-rep -id=Disco1.mia -path=Resultados/reports/reporte1.jpg -name=mbr
-rep -id=Disco2.mia -path=Resultados/reports/reporte2.jpg -name=mbr
+rep -id=561A -path=Resultados/reports/reporte1.jpg -name=mbr
+rep -id=561B -path=Resultados/reports/reporte2.jpg -name=mbr
+rep -id=561C -path=Resultados/reports/reporte3.jpg -name=mbr
