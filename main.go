@@ -12,6 +12,7 @@ y agregarlos a las importaciones
 import (
 	AD "MIA_2S_P1_201513656/Comandos/AdminDiscos"
 	Rep "MIA_2S_P1_201513656/Comandos/Rep"
+	AA 	"MIA_2S_P1_201513656/Comandos/AdminSisArchivos"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -112,6 +113,7 @@ func Analizar(entrada string) (string){
 			respuesta = AD.Mkdisk(parametros)
 		}else{
 			fmt.Println("ERROR EN MKDISK, FALTAN PARAMETROS EN MKDISK")
+			respuesta = "ERROR EN MKDISK, FALTAN PARAMETROS EN MKDISK"
 		}
 
 	}else if strings.ToLower(parametros[0])=="rmdisk"{		
@@ -119,6 +121,7 @@ func Analizar(entrada string) (string){
 			respuesta = AD.Rmdisk(parametros)
 		}else{
 			fmt.Println("ERROR RMDISK EN RMDISK, FALTAN PARAMETROS EN RMDISK") 
+			respuesta = "ERROR EN RMDISK, FALTAN PARAMETROS EN RMDISK"
 		}
 
 	}else if strings.ToLower(parametros[0])=="fdisk"{		
@@ -126,6 +129,7 @@ func Analizar(entrada string) (string){
 			respuesta = AD.Fdisk(parametros)
 		}else{
 			fmt.Println("ERROR EN FDISK, FALTAN PARAMETROS EN FDISK")
+			respuesta = "ERROR EN FDISK, FALTAN PARAMETROS EN FDISK"
 		}
 
 	}else if strings.ToLower(parametros[0])=="mount"{		
@@ -134,13 +138,24 @@ func Analizar(entrada string) (string){
 			
 		}else{
 			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
+			respuesta = "ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT"
 		}
+	
+	// *===================* ADMINISTRACION DE SISTEMA DE ARCHIVOS *======================*
+
+	}else if strings.ToLower(parametros[0])=="mkfs"{		
+		if len(parametros)>1{			
+			respuesta = AA.MKfs(parametros)
+		}else{
+			fmt.Println("ERROR EN MKFS, FALTAN PARAMETROS")
+		}
+		
 
 	}else if strings.ToLower(parametros[0])=="otros"{		
 		if len(parametros)>1{			
-			fmt.Println("unmount")
+			fmt.Println("")
 		}else{
-			fmt.Println("ERROR EN UNMOUNT, FALTAN PARAMETROS EN UNMOUNT")
+			fmt.Println("ERROR EN UNMOUNT, FALTAN PARAMETROS")
 		}
 
 	// *============================* OTROS *============================*

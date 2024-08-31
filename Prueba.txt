@@ -23,13 +23,13 @@ fdisk -type=P -path=Resultados/Discos/Disco3.mia -name=Part9 -Unit=K -size=100
 fdisk -Size=100 -path=Resultados/Discos/Disco4.mia -name=Par10
 fdisk -Size=150 -path=Resultados/Discos/Disco4.mia -name=Par11 -type=E
 
-mount -path=Resultados/Discos/Disco3.mia -name=Part9
-mount -path=Resultados/Discos/Disco4.mia -name=Par10
-mount -path=Resultados/Discos/Disco2.mia -name=Par5
-mount -path=Resultados/Discos/Disco1.mia -name=Par2
-mount -path=Resultados/Discos/Disco1.mia -name=Par1
-mount -path=Resultados/Discos/Disco4.mia -name=Par1
-mount -path=Resultados/Discos/Disco1.mia -name=Particion8
+mount -path=Resultados/Discos/Disco3.mia -name=Part9 #1A
+mount -path=Resultados/Discos/Disco4.mia -name=Par10 #1B
+mount -path=Resultados/Discos/Disco1.mia -name=Par2 #1C
+mount -path=Resultados/Discos/Disco1.mia -name=Par1 #2C
+mount -path=Resultados/Discos/Disco4.mia -name=Par1 #2B
+mount -path=Resultados/Discos/Disco2.mia -name=Part5 #1D
+mount -path=Resultados/Discos/Disco1.mia -name=Particion8 #3C
 
 
 #REPOSTES

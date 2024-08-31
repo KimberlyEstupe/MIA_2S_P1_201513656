@@ -1,7 +1,6 @@
 package rep
 
 import (
-	Admindiscos "MIA_2S_P1_201513656/Comandos/AdminDiscos"
 	"MIA_2S_P1_201513656/Herramientas"
 	"MIA_2S_P1_201513656/Structs"
 	"fmt"
@@ -72,10 +71,10 @@ func Rmbr (path string, id string) string{
 	Valido := false
 
 	//BUsca en struck de particiones montadas el id ingresado
-	for _,montado := range Admindiscos.Pmontaje{
+	for _,montado := range Structs.Montadas{
 		if montado.Id == id{
-			fmt.Println("Encotrado ", montado.MPath)
-			pathDico = montado.MPath
+			fmt.Println("Encotrado ", montado.PathM)
+			pathDico = montado.PathM
 			Valido = true
 		}
 	}
@@ -125,37 +124,54 @@ func Rmbr (path string, id string) string{
 //---------------- DISK -------------------------
 func disk(path string, id string)string{
 	var Respuesta string
-	tmp := strings.Split(path, "/")
-	nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+	var pathDico string
+	Valido := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Structs.Montadas{
+		if montado.Id == id{
+			fmt.Println("Encotrado ", montado.PathM)
+			pathDico = montado.PathM
+			Valido = true
+		}
+	}
+
+	if Valido{
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+		
+		file, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			Respuesta += "ERROR REP DISK Open "+ err.Error()	
+			return Respuesta	
+		}
+
+		var TempMBR Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(file, &TempMBR, 0); err != nil {
+			Respuesta += "ERROR REP READ Open "+ err.Error()
+			return Respuesta	
+		}
+
+		defer file.Close()
+
+		//inicia contenido del reporte graphviz del disco
+		cad := "digraph { \nnode [ shape=none ] \nTablaReportNodo [ label = < <table border=\"1\"> \n<tr> \n"
+		cad += " <td bgcolor='SlateBlue'  ROWSPAN='3'> MBR </td>\n"
+		cad += Structs.RepDiskGraphviz(TempMBR, file)
+		cad += "\n</table> > ]\n}"
+
+		carpeta := filepath.Dir(path)
+		rutaReporte := carpeta + "/" + nombre + ".dot"
+
+		fmt.Println("RP ", rutaReporte," name ",nombre)
+
+		Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
+		Respuesta += "Reporte de Disk ejecutado"
+	}else{
+		Respuesta += "ERROR: EL ID INGRESADO NO EXISTE"
+	}
 	
-	file, err := Herramientas.OpenFile("Resultados/Discos/"+id)
-	if err != nil {
-		Respuesta += "ERROR REP DISK Open "+ err.Error()	
-		return Respuesta	
-	}
-
-	var TempMBR Structs.MBR
-	// Read object from bin file
-	if err := Herramientas.ReadObject(file, &TempMBR, 0); err != nil {
-		Respuesta += "ERROR REP READ Open "+ err.Error()
-		return Respuesta	
-	}
-
-	defer file.Close()
-
-	//inicia contenido del reporte graphviz del disco
-	cad := "digraph { \nnode [ shape=none ] \nTablaReportNodo [ label = < <table border=\"1\"> \n<tr> \n"
-	cad += " <td bgcolor='SlateBlue'  ROWSPAN='3'> MBR </td>\n"
-	cad += Structs.RepDiskGraphviz(TempMBR, file)
-	cad += "\n</table> > ]\n}"
-
-	carpeta := filepath.Dir(path)
-	rutaReporte := carpeta + "/" + nombre + ".dot"
-
-	fmt.Println("RP ", rutaReporte," name ",nombre)
-
-	Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
-	Respuesta += "Reporte de Disk ejecutado"
 	return Respuesta
 
 }

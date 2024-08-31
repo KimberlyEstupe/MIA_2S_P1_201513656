@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var Pmontaje []Structs.Mount//GUarda en Ram las particones montadas
+//var Pmontaje []Structs.Mount//GUarda en Ram las particones montadas
 func Mount(entrada []string) (string){
 	var respuesta string
 	var name string
@@ -79,44 +79,41 @@ func Mount(entrada []string) (string){
 							if string(mbr.Partitions[i].Type[:]) != "E" {
 								//COMIENZO PARA MONTAR
 								
-								var id string
-								var ultima byte // ultima letra a agregar
-								ultima = 65 // A
-								contador :=0 //Cantidad de particiones montadas
+								var id string 							
+								var nuevaLetra byte = 'A'// A
+								contador := 1
+								modificada := false		
+								i:=0						
 
-								if len(Pmontaje) > 0{
-									var nuevaLetra [1]byte
-									
-									
-									for _,montado := range Pmontaje{
-										if montado.MPath ==pathE{
-											nuevaLetra = montado.Letter	
-											contador = int(montado.Cont)	
-											contador++							
-											break 
-										}
+								//Verifica si el path existe dentro de las particiones montadas
+								for _,montado := range Structs.Pmontaje{
+									if montado.MPath == pathE{
+										/*MOdifica el struct (En go al utilizar range se crea una copia 
+										por ende hay que modificar el struct original)*/
+										Structs.Pmontaje[i].Cont = Structs.Pmontaje[i].Cont + 1
+										contador = int(Structs.Pmontaje[i].Cont)										
+										nuevaLetra = Structs.Pmontaje[i].Letter
+										modificada = true	
+										break 
 									}
-
-									if contador!=0{									
-										ultima = nuevaLetra[0]
-									}else{
-										nuevaLetra := Pmontaje[len(Pmontaje)-1].Letter
-										ultima = nuevaLetra[0]
-										ultima++	
-										contador++																
-									}
-								//Si el slice esta vacio sera el primer dato en agregar
-								}else{
-									contador++																		
+									i++
 								}
 
-								id = "56"+strconv.Itoa(contador)+string(ultima) //Id de particion
-								//ingresar al struck de particiones montadas
-								Pmontaje = append(Pmontaje, Structs.Mount{MPath: pathE ,Letter: [1]byte{ultima},Cont: int32(contador), Id: id})
+								if !modificada{
+									if len(Structs.Pmontaje) > 0{
+										nuevaLetra = Structs.Pmontaje[len(Structs.Pmontaje)-1].Letter +1
+									}
+									Structs.AddPathM(pathE, nuevaLetra, 1)
+								}
+
+								id = "56"+strconv.Itoa(contador)+string(nuevaLetra) //Id de particion
+								fmt.Println("ID:  Letra ", string(nuevaLetra), " cont ", contador)
+								//Agregar al struct de montadas
+								Structs.AddMontadas(id, pathE)
 
 								//modificar la particion que se va a montar
-								copy(mbr.Partitions[i].Status[:], "A")
-								copy(mbr.Partitions[i].Id[:], id)
+								//copy(mbr.Partitions[i].Status[:], "A")
+								//copy(mbr.Partitions[i].Id[:], id)
 
 								//sobreescribir el mbr para guardar los cambios
 								if err := Herramientas.WriteObject(disco, mbr, 0); err != nil { //Sobre escribir el mbr
@@ -166,9 +163,15 @@ func Mount(entrada []string) (string){
 		}
 	}
 
-	for _,montado := range Pmontaje{
-		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter[:])," Contador: ",montado.Cont, " Id: ", montado.Id)
+	for _,montado := range Structs.Pmontaje{
+		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter)," Contador: ",montado.Cont)
 	}
+
+	fmt.Println("/---------------------------")
+	for _,montada := range Structs.Montadas{
+		fmt.Println("Id ", montada.Id, " Paht ", montada)
+	}
+	
 
 	return respuesta
 	
