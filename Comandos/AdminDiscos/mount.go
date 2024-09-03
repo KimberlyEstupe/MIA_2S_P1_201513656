@@ -12,8 +12,8 @@ import (
 //var Pmontaje []Structs.Mount//GUarda en Ram las particones montadas
 func Mount(entrada []string) (string){
 	var respuesta string
-	var name string
-	var pathE string
+	var name string	//Nobre de la particion a montar
+	var pathE string	//Path del Disco
 	Valido := true
 
 	for _, parametro := range entrada[1:] {
@@ -47,8 +47,6 @@ func Mount(entrada []string) (string){
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
 			break //por si en el camino reconoce algo invalido de una vez se sale
 		}
-
-		
 	}
 
 	if Valido{
@@ -67,7 +65,10 @@ func Mount(entrada []string) (string){
 				if err := Herramientas.ReadObject(disco, &mbr, 0); err != nil {
 					respuesta += "ERROR Read " + err.Error()+ "\n"
 					return  respuesta
-				}				
+				}
+				
+				// cerrar el archivo del disco
+				defer disco.Close()
 
 				montar := true //usar si se van a montar logicas
 				reportar := false
@@ -83,20 +84,20 @@ func Mount(entrada []string) (string){
 								var nuevaLetra byte = 'A'// A
 								contador := 1
 								modificada := false		
-								i:=0						
+								k:=0						
 
 								//Verifica si el path existe dentro de las particiones montadas
 								for _,montado := range Structs.Pmontaje{
 									if montado.MPath == pathE{
 										/*MOdifica el struct (En go al utilizar range se crea una copia 
 										por ende hay que modificar el struct original)*/
-										Structs.Pmontaje[i].Cont = Structs.Pmontaje[i].Cont + 1
-										contador = int(Structs.Pmontaje[i].Cont)										
-										nuevaLetra = Structs.Pmontaje[i].Letter
+										Structs.Pmontaje[k].Cont = Structs.Pmontaje[k].Cont + 1
+										contador = int(Structs.Pmontaje[k].Cont)										
+										nuevaLetra = Structs.Pmontaje[k].Letter
 										modificada = true	
 										break 
 									}
-									i++
+									k++
 								}
 
 								if !modificada{
@@ -111,9 +112,9 @@ func Mount(entrada []string) (string){
 								//Agregar al struct de montadas
 								Structs.AddMontadas(id, pathE)
 
-								//modificar la particion que se va a montar
+								//TODO modificar la particion que se va a montar								
 								//copy(mbr.Partitions[i].Status[:], "A")
-								//copy(mbr.Partitions[i].Id[:], id)
+								copy(mbr.Partitions[i].Id[:], id)
 
 								//sobreescribir el mbr para guardar los cambios
 								if err := Herramientas.WriteObject(disco, mbr, 0); err != nil { //Sobre escribir el mbr
@@ -134,9 +135,6 @@ func Mount(entrada []string) (string){
 					}
 				}
 
-				// cerrar el archivo del disco
-				defer disco.Close()
-
 				if montar {
 					fmt.Println("MOUNT Error. No se pudo montar la particion ", name)
 					fmt.Println("MOUNT Error. No se encontro la particion")
@@ -145,7 +143,7 @@ func Mount(entrada []string) (string){
 				}
 
 				if reportar {
-					fmt.Println("\nLISTA DE PARTICIONES MONTADAS\n ")
+					fmt.Println("\nLISTA DE PARTICIONES MONTADAS EN ",name,"\n ")
 					for i := 0; i < 4; i++ {
 						estado := string(mbr.Partitions[i].Status[:])
 						if estado == "A" {
@@ -161,10 +159,6 @@ func Mount(entrada []string) (string){
 			fmt.Println("ERROR: FALTA PARAMETRO PATH EN MOUNT")
 			respuesta += "ERROR: FALTA PATH EN MOUNT"	
 		}
-	}
-
-	for _,montado := range Structs.Pmontaje{
-		fmt.Println("Path: ",montado.MPath, "Letra: ",string(montado.Letter)," Contador: ",montado.Cont)
 	}
 
 	fmt.Println("/---------------------------")

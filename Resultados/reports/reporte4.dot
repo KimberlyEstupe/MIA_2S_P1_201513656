@@ -1,0 +1,116 @@
+digraph { 
+node [ shape=none ] 
+TablaReportNodo [ label = < <table border="1"> 
+ <tr>
+  <td bgcolor='SlateBlue' COLSPAN="2"> Reporte MBR </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> mbr_tamano </td> 
+  <td bgcolor='Azure'> 10485760 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#AFA1D1'> mbr_fecha_creacion </td> 
+  <td bgcolor='#AFA1D1'> 02/09/2024 17:38 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> mbr_disk_signature </td> 
+  <td bgcolor='Azure'> 738 </td> 
+ </tr>  
+ <tr>
+  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_status </td> 
+  <td bgcolor='Azure'> I </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_type </td> 
+  <td bgcolor='LightSkyBlue'> P </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_fit </td> 
+  <td bgcolor='Azure'> W </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_start </td> 
+  <td bgcolor='LightSkyBlue'> 165 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_size </td> 
+  <td bgcolor='Azure'> 102400 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_name </td> 
+  <td bgcolor='LightSkyBlue'> Par1 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_id </td> 
+  <td bgcolor='Azure'> 562B </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_status </td> 
+  <td bgcolor='Azure'> I </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_type </td> 
+  <td bgcolor='LightSkyBlue'> P </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_fit </td> 
+  <td bgcolor='Azure'> W </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_start </td> 
+  <td bgcolor='LightSkyBlue'> 102565 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_size </td> 
+  <td bgcolor='Azure'> 102400 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_name </td> 
+  <td bgcolor='LightSkyBlue'> Par10 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_id </td> 
+  <td bgcolor='Azure'> 561B </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='DeepSkyBlue' COLSPAN="2"> PARTICION </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_status </td> 
+  <td bgcolor='Azure'> I </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_type </td> 
+  <td bgcolor='LightSkyBlue'> E </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_fit </td> 
+  <td bgcolor='Azure'> W </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_start </td> 
+  <td bgcolor='LightSkyBlue'> 204965 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_size </td> 
+  <td bgcolor='Azure'> 153600 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='LightSkyBlue'> part_name </td> 
+  <td bgcolor='LightSkyBlue'> Par11 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> part_id </td> 
+  <td bgcolor='Azure'> - </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#808080' COLSPAN="2"> ESPACIO LIBRE <br/> 10127195 bytes </td> 
+ </tr> 
+</table> > ]
+}
