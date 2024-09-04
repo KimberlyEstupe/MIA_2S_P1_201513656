@@ -52,6 +52,23 @@ func Rep(entrada []string) string{
 			case "disk":
 				fmt.Println("reporte disk")
 				respuesta+= disk(path, id)
+			case "inode":
+				fmt.Println("reporte inode")
+			case "block":
+				fmt.Println("reporte block")
+			case "bm_inode":
+				fmt.Println("reporte bm_inode")
+				respuesta += BM_inode(path, id)
+			case "bm_bloc":
+				fmt.Println("reporte bm_bloc")
+				respuesta += BM_Bloque(path, id)
+			case "sb":
+				fmt.Println("reporte sb")
+				respuesta += superBloque(path, id)
+			case "file":
+				fmt.Println("reporte file")
+			case "ls":
+				fmt.Println("reporte ls")
 			default:
 				fmt.Println("REP Error: Reporte ", name, " desconocido")
 				respuesta+="REP Error: Reporte "+ name+" desconocido"
@@ -64,7 +81,7 @@ func Rep(entrada []string) string{
 	return respuesta
 }
 
-//---------------------- MBR ---------------------
+// =============================== MBR ===============================
 func Rmbr (path string, id string) string{
 	var Respuesta string
 	var pathDico string
@@ -73,7 +90,6 @@ func Rmbr (path string, id string) string{
 	//BUsca en struck de particiones montadas el id ingresado
 	for _,montado := range Structs.Montadas{
 		if montado.Id == id{
-			fmt.Println("Encotrado ", montado.PathM)
 			pathDico = montado.PathM
 			Valido = true
 		}
@@ -121,7 +137,7 @@ func Rmbr (path string, id string) string{
 }
 
 
-//---------------- DISK -------------------------
+//=============================== DISK ===============================
 func disk(path string, id string)string{
 	var Respuesta string
 	var pathDico string
@@ -130,7 +146,6 @@ func disk(path string, id string)string{
 	//BUsca en struck de particiones montadas el id ingresado
 	for _,montado := range Structs.Montadas{
 		if montado.Id == id{
-			fmt.Println("Encotrado ", montado.PathM)
 			pathDico = montado.PathM
 			Valido = true
 		}
@@ -174,4 +189,269 @@ func disk(path string, id string)string{
 	
 	return Respuesta
 
+}
+
+// =============================== SB ===============================
+func superBloque (path string, id string) string{
+	var respuesta string
+	var pathDico string
+	reportar := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Structs.Montadas{
+		if montado.Id == id{
+			pathDico = montado.PathM
+			reportar = true
+		}
+	}
+
+	//Verifica que se encontro el ID y la Path del disco
+	if pathDico == ""{
+		reportar = false
+		return "ERROR MB_INODE: ID NO ENCONTRADO"
+	}
+
+	if reportar{
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+
+		tmp2 := strings.Split(pathDico, "/")
+		nombreDisco := strings.Split(tmp2[len(tmp2)-1], ".")[0]
+
+		file, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			return "ERROR REP SB OPEN FILE "+err.Error()
+		}
+
+		var mbr Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
+			return "ERROR REP SB READ FILE "+err.Error()
+		}
+
+		// Close bin file
+		defer file.Close()
+
+		//Encontrar la particion correcta
+		part := -1
+		for i := 0; i < 4; i++ {
+			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
+			if identificador == id {
+				reportar = true
+				part = i
+				break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
+			}
+		}
+
+		cad := "digraph { \nnode [ shape=none ] \nTablaReportNodo [ label = < <table border=\"1\"> \n"
+		cad += " <tr>\n  <td bgcolor='darkgreen' COLSPAN=\"2\"> <font color='white'> Reporte SUPERBLOQUE </font> </td> \n </tr> \n"
+		cad += Structs.RepSB(mbr.Partitions[part], file)
+		cad += "</table> > ]\n}"
+
+		//reporte requerido
+		carpeta := filepath.Dir(path)
+		rutaReporte := carpeta + "/" + nombre + ".dot"
+		respuesta += "Reporte BM_Bloque " + nombre +" creado \n"
+		respuesta += " Pertenece al disco: " + nombreDisco
+
+		Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
+	}
+
+	return respuesta
+}
+
+// =============================== BM INODE ===============================
+func BM_inode(path string, id string) string{
+	var respuesta string
+	var pathDico string
+	reportar := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Structs.Montadas{
+		if montado.Id == id{
+			pathDico = montado.PathM
+			reportar = true
+		}
+	}
+
+	//Verifica que se encontro el ID y la Path del disco
+	if pathDico == ""{
+		reportar = false
+		return "ERROR MB_INODE: ID NO ENCONTRADO"
+	}
+
+	if reportar{
+		//Obtenermos el nombre del reporte que vamos a crear
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+
+		tmp2 := strings.Split(pathDico, "/")
+		nombreDisco := strings.Split(tmp2[len(tmp2)-1], ".")[0]
+
+		file, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			return "ERROR REP SB OPEN FILE "+err.Error()
+		}
+
+		//Obtener mbr
+		var mbr Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
+			return "ERROR REP SB READ FILE "+err.Error()
+		}
+
+		// Close bin file
+		defer file.Close()
+
+		//Encontrar la particion correcta
+		part := -1
+		for i := 0; i < 4; i++ {
+			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
+			if identificador == id {
+				reportar = true
+				part = i
+				break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
+			}
+		}
+
+		var superBloque Structs.Superblock
+		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
+		if errREAD != nil {
+			fmt.Println("REP Error. Particion sin formato")
+			return "REP Error. Particion sin formato"
+		}
+
+		cad := ""
+		inicio := superBloque.S_bm_inode_start
+		fin := superBloque.S_bm_block_start
+		count := 1 //para contar el numero de caracteres por linea (maximo 20)
+
+		//objeto para leer un byte decodificado
+		var bm Structs.Bite
+
+		for i := inicio; i < fin; i++ {
+			//cargo el byte (struct de [1]byte) decodificado como las demas estructuras
+			Herramientas.ReadObject(file, &bm, int64(i))
+
+			if bm.Val[0] == 0 {
+				cad += string("0 ")
+			} else {
+				cad += "1 "
+			}
+
+			if count == 20 {
+				cad += "\n"
+				count = 0
+			}
+
+			count++
+		}
+
+		//reporte requerido
+		carpeta := filepath.Dir(path)//DIr es para obtener el directorio
+		rutaReporte := carpeta + "/" + nombre + ".txt"
+		Herramientas.Reporte(rutaReporte, cad)
+		respuesta += "Reporte BM Inode " + nombre +" creado \n"
+		respuesta += " Pertenece al disco: " + nombreDisco
+	}
+
+	return respuesta
+}
+
+// =============================== BM BLOQUE ===============================
+func BM_Bloque (path string, id string) string{
+	var respuesta string
+	var pathDico string
+	reportar := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Structs.Montadas{
+		if montado.Id == id{
+			pathDico = montado.PathM
+			reportar = true
+		}
+	}
+
+	//Verifica que se encontro el ID y la Path del disco
+	if pathDico == ""{
+		reportar = false
+		return "ERROR MB_INODE: ID NO ENCONTRADO"
+	}
+
+	if reportar{
+		//Obtenermos el nombre del reporte que vamos a crear
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+
+		tmp2 := strings.Split(pathDico, "/")
+		nombreDisco := strings.Split(tmp2[len(tmp2)-1], ".")[0]
+
+		file, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			return "ERROR REP SB OPEN FILE "+err.Error()
+		}
+
+		var mbr Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
+			return "ERROR REP SB READ FILE "+err.Error()
+		}
+
+		// Close bin file
+		defer file.Close()
+
+		//Encontrar la particion correcta
+		part := -1
+		fmt.Println(part, "ignorar")
+		for i := 0; i < 4; i++ {		
+			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
+			if identificador == id {
+				reportar = true
+				part = i
+				break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
+			}
+		}
+
+		var superBloque Structs.Superblock
+		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
+		if errREAD != nil {
+			fmt.Println("REP Error. Particion sin formato")
+			return "REP Error. Particion sin formato"
+		}
+
+		cad := ""
+		inicio := superBloque.S_bm_block_start
+		fin := superBloque.S_bm_inode_start
+		count := 1 //para contar el numero de caracteres por linea (maximo 20)
+
+		//objeto para leer un byte decodificado
+		var bm Structs.Bite
+
+		for i := inicio; i < fin; i++ {
+			//cargo el byte (struct de [1]byte) decodificado como las demas estructuras
+			Herramientas.ReadObject(file, &bm, int64(i))
+
+			if bm.Val[0] == 0 {
+				cad += string("0 ")
+			} else {
+				cad += "1 "
+			}
+
+			if count == 20 {
+				cad += "\n"
+				count = 0
+			}
+
+			count++			
+		}
+
+
+		//reporte requerido
+		carpeta := filepath.Dir(path)//DIr es para obtener el directorio
+		rutaReporte := carpeta + "/" + nombre + ".txt"
+		Herramientas.Reporte(rutaReporte, cad)		
+		respuesta += "Reporte BM_Bloque " + nombre +" creado \n"
+		respuesta += " Pertenece al disco: " + nombreDisco
+	}
+	return respuesta
 }

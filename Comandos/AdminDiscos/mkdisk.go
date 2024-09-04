@@ -21,8 +21,6 @@ func Mkdisk(entrada []string) string{
 	InitSize := false	//Valida el ingreso del parametro size
 	InitPath := false
 
-	fmt.Println(fit)
-
 	/*
 	Se recorren todos los parametros
 	_ seria el indice, pero se omite. 

@@ -1,6 +1,10 @@
 package Structs
 
-import "strings"
+import (
+	"MIA_2S_P1_201513656/Herramientas"
+	"fmt"
+	"os"
+)
 
 // NOTA: Recordar que los atributos de los struct deben iniciar con mayuscula
 // SUPERBLOQUES
@@ -49,7 +53,7 @@ type Content struct {
 }
 
 // Metodo que anula bytes nulos para B_name
-func GetB_name(nombre string) string {
+/*func GetB_name(nombre string) string {
 	posicionNulo := strings.IndexByte(nombre, 0)
 
 	if posicionNulo != -1 {
@@ -63,9 +67,73 @@ func GetB_name(nombre string) string {
 
 	}
 	return nombre //-1 el nombre no tiene bytes nulos
-}
+}*/
 
 // BLOQUE DE ARCHIVOS
 type Fileblock struct {
 	B_content [64]byte //contenido del archivo
+}
+
+// Metodo que anula bytes nulos para B_content PARA EL REPORTE
+/*func GetB_content(nombre string) string {
+	// Reemplazar todos los saltos de línea con un guion (-)
+	nombre = strings.ReplaceAll(nombre, "\n", "<br/>")
+	posicionNulo := strings.IndexByte(nombre, 0)
+
+	if posicionNulo != -1 {
+		if posicionNulo != 0 {
+			//tiene bytes nulos
+			nombre = nombre[:posicionNulo]
+		} else {
+			//el  nombre esta vacio
+			nombre = "-"
+		}
+
+	}
+	//regreso los saltos de linea ya sin bytes nulos
+	//nombre = strings.ReplaceAll(nombre, "-", "\n")
+	return nombre //-1 el nombre no tiene bytes nulos
+}*/
+
+// BLOQUE DE APUNTADORES INDIRECTOS
+type Pointerblock struct {
+	B_pointers [16]int32 //apuntadores a bloques (archivo/carpeta)
+}
+
+// para leer byte por byte los bitmaps (reportes)
+type Bite struct {
+	Val [1]byte
+}
+
+// =========================== REPORTE SuperBLoque =============================================
+func RepSB(particion Partition, disco *os.File) string {
+	cad := ""
+	//cargar el superbloque
+	var SuperBloque Superblock
+	//para las logicas el superbloque se escribe/lee en particion.start+binary.size(structs.EBR)
+	err := Herramientas.ReadObject(disco, &SuperBloque, int64(particion.Start))
+	if err != nil {
+		fmt.Println("REP Error. Particion sin formato")
+		return cad
+	}
+	//LLenar los campos del reporte
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_filesystem_type </td> \n  <td bgcolor='Azure'> EXT%d </td> \n </tr> \n", SuperBloque.S_filesystem_type)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_inodes_count </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_inodes_count)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_blocks_count </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_blocks_count)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_free_inodes_count </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_free_inodes_count)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_free_blocks_count </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_free_blocks_count)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_mtime </td> \n  <td bgcolor='#7FC97F'> %s </td> \n </tr> \n", string(SuperBloque.S_mtime[:]))
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_umtime </td> \n  <td bgcolor='Azure'> %s </td> \n </tr> \n", string(SuperBloque.S_mtime[:]))
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_mnt_count </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_mnt_count)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_magic </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_magic)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_inode_size </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_inode_size)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_block_size </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_block_size)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_first_ino </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_first_ino)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_first_blo </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_first_blo)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_bm_inode_start </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_bm_inode_start)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_bm_block_start </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_bm_block_start)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='#7FC97F'> S_inode_start </td> \n  <td bgcolor='#7FC97F'> %d </td> \n </tr> \n", SuperBloque.S_inode_start)
+	cad += fmt.Sprintf(" <tr>\n  <td bgcolor='Azure'> S_block_start </td> \n  <td bgcolor='Azure'> %d </td> \n </tr> \n", SuperBloque.S_block_start)
+	
+	return cad
 }

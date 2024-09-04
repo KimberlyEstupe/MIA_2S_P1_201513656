@@ -55,7 +55,7 @@ func MKfs(entrada []string) (string){
 			}
 		}
 		if pathDico == ""{
-			respuesta += "ERROR MKFS NO SE ENCONTRA EL ID"
+			respuesta += "ERROR MKFS ID INCORRECTO"
 			fmt.Println("ERROR MKFS NO SE ENCONTRA EL ID")
 			Valido = false
 		}
@@ -124,11 +124,11 @@ func MKfs(entrada []string) (string){
 				fmt.Println("Particion con id ", id, " formateada correctamente")
 				respuesta+= "Particion con id "+ id+ " formateada correctamente"
 
-				//TODO Si hubiera una sesion iniciada eliminarla
-				/*if Structs.UsuarioActual.Status {
+				//Si hubiera una sesion iniciada eliminarla
+				if Structs.UsuarioActual.Status {
 					var new Structs.UserInfo
 					Structs.UsuarioActual = new
-				}*/
+				}
 			}
 		}
 
@@ -257,13 +257,13 @@ func crearEXT2(n int32, particion Structs.Partition, newSuperBloque Structs.Supe
 	}
 	//Inode1 apunta al bloque1 (en este caso el bloque1 contiene el archivo)
 	Inode1.I_block[0] = 1
-	data := "1,G,root\n1,U,root,root,123\n"
+	data := "1,G,root\n1,U,root,root,123\n" 
 	var fileBlock1 Structs.Fileblock //Bloque1 -> archivo
 	copy(fileBlock1.B_content[:], []byte(data))
 
 	//resumen
 	//Inodo 0 -> Bloque 0 -> Inodo1 -> bloque1 (archivo)
-	//Similar a las siguientes instrucciones analogas a la tarea3
+	
 	//Crear la carpeta raiz /
 	//crear el archivo users.txt
 

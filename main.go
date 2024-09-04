@@ -13,6 +13,7 @@ import (
 	AD "MIA_2S_P1_201513656/Comandos/AdminDiscos"
 	Rep "MIA_2S_P1_201513656/Comandos/Rep"
 	AA 	"MIA_2S_P1_201513656/Comandos/AdminSisArchivos"
+	Us  "MIA_2S_P1_201513656/Comandos/Usuarios"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -149,7 +150,15 @@ func Analizar(entrada string) (string){
 		}else{
 			fmt.Println("ERROR EN MKFS, FALTAN PARAMETROS")
 		}
-		
+	
+	// *===================* ADMINISTRACION DE USUARIOS Y CARPETAS *======================*
+
+	}else if strings.ToLower(parametros[0])=="login"{		
+		if len(parametros)>1{			
+			respuesta = Us.Login(parametros)
+		}else{
+			fmt.Println("ERROR EN LOGIN, FALTAN PARAMETROS")
+		}	
 
 	}else if strings.ToLower(parametros[0])=="otros"{		
 		if len(parametros)>1{			

@@ -22,6 +22,7 @@ func Mount(entrada []string) (string){
 
 		if len(valores)!=2{
 			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
+			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			break
 		}
@@ -32,6 +33,7 @@ func Mount(entrada []string) (string){
 			_, err := os.Stat(pathE)
 			if os.IsNotExist(err) {
 				fmt.Println("FDISK Error: El disco no existe")
+				respuesta += "FDISK Error: El disco no existe"
 				Valido = false
 				break // Terminar el bucle porque encontramos un nombre único
 			}
@@ -45,6 +47,7 @@ func Mount(entrada []string) (string){
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
+			respuesta += "MKDISK Error: Parametro desconocido: "+ valores[0]
 			break //por si en el camino reconoce algo invalido de una vez se sale
 		}
 	}
@@ -83,21 +86,18 @@ func Mount(entrada []string) (string){
 								var id string 							
 								var nuevaLetra byte = 'A'// A
 								contador := 1
-								modificada := false		
-								k:=0						
+								modificada := false															
 
 								//Verifica si el path existe dentro de las particiones montadas
-								for _,montado := range Structs.Pmontaje{
-									if montado.MPath == pathE{
-										/*MOdifica el struct (En go al utilizar range se crea una copia 
-										por ende hay que modificar el struct original)*/
+								for k:=0; k < len(Structs.Pmontaje); k++{
+									if Structs.Pmontaje[k].MPath == pathE{
+										//MOdifica el struct 
 										Structs.Pmontaje[k].Cont = Structs.Pmontaje[k].Cont + 1
 										contador = int(Structs.Pmontaje[k].Cont)										
 										nuevaLetra = Structs.Pmontaje[k].Letter
 										modificada = true	
 										break 
 									}
-									k++
 								}
 
 								if !modificada{
@@ -150,6 +150,12 @@ func Mount(entrada []string) (string){
 							fmt.Printf("Partition %d: name: %s, status: %s, id: %s, tipo: %s, start: %d, size: %d, fit: %s, correlativo: %d\n", i, string(mbr.Partitions[i].Name[:]), string(mbr.Partitions[i].Status[:]), string(mbr.Partitions[i].Id[:]), string(mbr.Partitions[i].Type[:]), mbr.Partitions[i].Start, mbr.Partitions[i].Size, string(mbr.Partitions[i].Fit[:]), mbr.Partitions[i].Correlative)
 						}
 					}
+
+					fmt.Println("/--------------------------------")
+					fmt.Println("PARTICIONES MONTADAS")
+					for _,montada := range Structs.Montadas{
+						fmt.Println("Id ", montada.Id, " Paht ", montada)
+					}
 				}
 			}else{
 				fmt.Println("ERROR: FALTA NAME  EN MOUNT")	
@@ -161,10 +167,7 @@ func Mount(entrada []string) (string){
 		}
 	}
 
-	fmt.Println("/---------------------------")
-	for _,montada := range Structs.Montadas{
-		fmt.Println("Id ", montada.Id, " Paht ", montada)
-	}
+	
 	
 
 	return respuesta

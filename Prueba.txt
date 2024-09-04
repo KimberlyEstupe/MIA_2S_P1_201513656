@@ -13,10 +13,11 @@ fdisk -Size=300 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
 fdisk -Size=400 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par2
 fdisk -Size=200 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Particion8
 
+fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=Part5 -size=100
 fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par3 -size=300
 fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par2 -size=90
 fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par4 -size=80
-fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=Part5 -size=100
+
 fdisk -type=E -path=Resultados/Discos/Disco3.mia -name=Part8 -Unit=K -size=200
 fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco4.mia -name=Par1
 fdisk -type=P -path=Resultados/Discos/Disco3.mia -name=Part9 -Unit=K -size=100
@@ -42,10 +43,14 @@ mkfs -id=562B
 
 #REPOSTES
 rep -id=561C -path=Resultados/reports/reporte1.jpg -name=mbr
-rep -id=561D -path=Resultados/reports/reporte2.jpg -name=mbr
 rep -id=561A -path=Resultados/reports/reporte3.jpg -name=mbr
 rep -id=561B -path=Resultados/reports/reporte4.jpg -name=mbr
 
-rep -id=562C -path=Resultados/reports/reporte11.jpg -name=mbr
+rep -id=561C -path=Resultados/reports/rInode.txt -name=bm_inode
+rep -id=561A -path=Resultados/reports/rInode2.txt -name=bm_inode
+rep -id=561B -path=Resultados/reports/rInode1.txt -name=bm_inode
 
-rep -id=561C -path=Resultados/reports/reporte13.jpg -name=mbr
+rep -id=561C -path=Resultados/reports/rBloque.txt -name=bm_bloc
+rep -id=561A -path=Resultados/reports/rBloque2.txt -name=bm_bloc
+rep -id=561B -path=Resultados/reports/rBloque1.txt -name=bm_bloc
+
