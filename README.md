@@ -19,3 +19,14 @@ Si no funciona, reiniciar Visual Code
 go mod init
 ```
 Revisar go.mod y verificar el module, este sera la carpeta raiz para realizar las importaciones
+
+### Para correr el proyecto
+```sh
+go run main.go
+```
+
+### Levantar el fronted
+```sh
+cd front
+npm start
+```

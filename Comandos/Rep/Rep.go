@@ -29,7 +29,7 @@ func Rep(entrada []string) string{
 		if strings.ToLower(valores[0]) == "name" {
 			name = strings.ToLower(valores[1])
 		} else if strings.ToLower(valores[0]) == "path" {
-			// Eliminar comillas
+			valores[1] = "Resultados/"+valores[1]
 			path = strings.ReplaceAll(valores[1], "\"", "")
 		} else if strings.ToLower(valores[0]) == "id" {
 			id = strings.ToUpper(valores[1])
@@ -402,11 +402,9 @@ func BM_Bloque (path string, id string) string{
 
 		//Encontrar la particion correcta
 		part := -1
-		fmt.Println(part, "ignorar")
 		for i := 0; i < 4; i++ {		
 			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
 			if identificador == id {
-				reportar = true
 				part = i
 				break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
 			}
@@ -421,7 +419,7 @@ func BM_Bloque (path string, id string) string{
 
 		cad := ""
 		inicio := superBloque.S_bm_block_start
-		fin := superBloque.S_bm_inode_start
+		fin := superBloque.S_inode_start
 		count := 1 //para contar el numero de caracteres por linea (maximo 20)
 
 		//objeto para leer un byte decodificado
@@ -442,7 +440,7 @@ func BM_Bloque (path string, id string) string{
 				count = 0
 			}
 
-			count++			
+			count++
 		}
 
 

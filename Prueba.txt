@@ -3,54 +3,18 @@
 #git push origin main
 
 #mkdisk
-mkdisk -Size=3000 -unit=K -path=Resultados/Discos/Disco1.mia
-mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
-mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
-mkdisk -size=10 -path="Resultados/Discos/Disco4.mia"
-
-#Fdisk
-fdisk -Size=300 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
-fdisk -Size=400 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par2
-fdisk -Size=200 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Particion8
-
-fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=Part5 -size=100
-fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par3 -size=300
-fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par2 -size=90
-fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=K -name=Par4 -size=80
-
-fdisk -type=E -path=Resultados/Discos/Disco3.mia -name=Part8 -Unit=K -size=200
-fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco4.mia -name=Par1
-fdisk -type=P -path=Resultados/Discos/Disco3.mia -name=Part9 -Unit=K -size=100
-fdisk -Size=100 -path=Resultados/Discos/Disco4.mia -name=Par10
-fdisk -Size=150 -path=Resultados/Discos/Disco4.mia -name=Par11 -type=E
-
-mount -path=Resultados/Discos/Disco3.mia -name=Part9 #1A
-mount -path=Resultados/Discos/Disco4.mia -name=Par10 #1B
-mount -path=Resultados/Discos/Disco1.mia -name=Par2 #1C
-mount -path=Resultados/Discos/Disco1.mia -name=Par1 #2C
-mount -path=Resultados/Discos/Disco4.mia -name=Par1 #2B
-mount -path=Resultados/Discos/Disco2.mia -name=Part5 #1D
-mount -path=Resultados/Discos/Disco1.mia -name=Particion8 #3C
-
+mkdisk -Size=300 -unit=K -path=Discos/Disco1.mia
+fdisk -Size=100 -fit=WF -path=Discos/Disco1.mia -name=Par1
+mount -path=Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
-mkfs -id=562C
-mkfs -type=full -id=563C
-mkfs -id=561B
-mkfs -type=full -id=561D
-mkfs -type=full -id=561C
-mkfs -id=562B
-
+login -user=root -pass=123 -id=561A
 
 #REPOSTES
-rep -id=561C -path=Resultados/reports/reporte1.jpg -name=mbr
-rep -id=561A -path=Resultados/reports/reporte3.jpg -name=mbr
-rep -id=561B -path=Resultados/reports/reporte4.jpg -name=mbr
+rep -id=561C -path=reports/rInode.txt -name=bm_inode
+rep -id=561A -path=reports/rInode2.txt -name=bm_inode
+rep -id=561B -path=reports/rInode1.txt -name=bm_inode
 
-rep -id=561C -path=Resultados/reports/rInode.txt -name=bm_inode
-rep -id=561A -path=Resultados/reports/rInode2.txt -name=bm_inode
-rep -id=561B -path=Resultados/reports/rInode1.txt -name=bm_inode
-
-rep -id=561C -path=Resultados/reports/rBloque.txt -name=bm_bloc
-rep -id=561A -path=Resultados/reports/rBloque2.txt -name=bm_bloc
-rep -id=561B -path=Resultados/reports/rBloque1.txt -name=bm_bloc
+rep -id=561C -path=reports/rBloque.txt -name=bm_bloc
+rep -id=561A -path=reports/rBloque2.txt -name=bm_bloc
+rep -id=561B -path=reports/rBloque1.txt -name=bm_bloc
 

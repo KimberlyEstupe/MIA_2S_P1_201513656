@@ -158,7 +158,11 @@ func Analizar(entrada string) (string){
 			respuesta = Us.Login(parametros)
 		}else{
 			fmt.Println("ERROR EN LOGIN, FALTAN PARAMETROS")
-		}	
+		}
+	
+	}else if strings.ToLower(parametros[0])=="logout"{		
+		fmt.Println("")
+		respuesta = Us.Logout()
 
 	}else if strings.ToLower(parametros[0])=="otros"{		
 		if len(parametros)>1{			

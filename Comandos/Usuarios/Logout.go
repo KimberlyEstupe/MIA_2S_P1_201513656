@@ -1,29 +1,19 @@
 package Usuarios
 
 import (
+	"MIA_2S_P1_201513656/Structs"
 	"fmt"
-	"strings"
 )
 
-func Logout(entrada []string) string{
+func Logout() string{
 	var respuesta string
-	Valido := true
-
-	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
-		valores := strings.Split(tmp,"=")
-
-		if len(valores)!=2{
-			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]+ "\n"
-			Valido = false
-			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
-			return respuesta
-		}
+	if Structs.UsuarioActual.Status {
+		Structs.SalirUsuario()
+		fmt.Println("Se ha cerrado la sesion")
+		respuesta += "Se ha cerrado la sesion"
+	}else{
+		respuesta += "ERROR LOGUT: NO HAY SECION INICIADA"
 	}
 
-	if Valido{
-		fmt.Println("Validado")
-	}
 	return respuesta
 }
