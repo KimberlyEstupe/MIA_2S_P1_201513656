@@ -28,7 +28,8 @@ Si no funciona, reiniciar Visual Code
 ```sh
 go mod init
 ```
-Revisar go.mod y verificar el module, este sera la carpeta raiz para realizar las importaciones
+Revisar go.mod y verificar el module, este sera la carpeta raiz para realizar las importaciones.  
+Las funciones que se importaran deben iniciar por una letra mayuscula
 
 ### Cors
 ```sh

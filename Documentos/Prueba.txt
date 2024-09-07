@@ -10,6 +10,11 @@ mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
 mkgrp -name=usuarios
+mkgrp -name=usu1
+mkgrp -name=usu2
+
+rmgrp -name=usu2
+rmgrp -name=usuarios
 
 #REPOSTES
 rep -id=561C -path=reports/rInode.txt -name=bm_inode

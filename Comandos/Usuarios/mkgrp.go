@@ -12,7 +12,9 @@ import (
 func Mkgrp(entrada []string) string{
 	var respuesta string
 	var name string
-	if !Structs.UsuarioActual.Status {
+	UsuarioA := Structs.UsuarioActual
+	
+	if !UsuarioA.Status {
 		respuesta += "ERROR MKGRP: NO HAY SECION INICIADA"+ "\n"
 		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR"+ "\n"
 		return respuesta
@@ -29,7 +31,7 @@ func Mkgrp(entrada []string) string{
 			return respuesta
 		}
 
-		//********************  ID *****************
+		//********************  NAME *****************
 		if strings.ToLower(valores[0]) == "name" {
 			name = (valores[1])
 			//validar maximo 10 caracteres
@@ -44,8 +46,6 @@ func Mkgrp(entrada []string) string{
 			return "LOGIN ERROR: Parametro desconocido: "+valores[0] + "\n"
 		}
 	}
-
-	UsuarioA := Structs.UsuarioActual
 
 	if UsuarioA.Nombre == "root"{
 		file, err := Herramientas.OpenFile(UsuarioA.PathD)
@@ -197,7 +197,12 @@ func Mkgrp(entrada []string) string{
 					return "Se ha agregado el grupo '"+name+"' exitosamente. "
 				}
 			}
-		}//FIn Add new Usuario	
+		//FIn Add new Usuario
+		}else{	
+			fmt.Println("ERROR INESPERADO CON LA PARCION EN MKGRP")
+			respuesta += "ERROR INESPERADO CON LA PARCION EN MKGRP"
+		}
+
 	}else{
 		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
 		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"

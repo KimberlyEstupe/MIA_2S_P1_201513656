@@ -169,6 +169,13 @@ func Analizar(entrada string) (string){
 		}else{
 			fmt.Println("ERROR EN MKGRP, FALTAN PARAMETROS")
 		}
+	
+	}else if strings.ToLower(parametros[0])=="rmgrp"{		
+		if len(parametros)>1{			
+			respuesta = Us.Rmgrp(parametros)
+		}else{
+			fmt.Println("ERROR EN RMGRP, FALTAN PARAMETROS")
+		}
 
 	// *============================* OTROS *============================*
 	} else if strings.ToLower(parametros[0]) == "rep" {
