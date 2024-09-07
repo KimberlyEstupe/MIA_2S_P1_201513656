@@ -5,6 +5,7 @@ import (
 	"MIA_2S_P1_201513656/Structs"
 	"encoding/binary"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -88,12 +89,12 @@ func Mkgrp(entrada []string) string{
 			//leer los datos del user.txt
 			var contenido string
 			var fileBlock Structs.Fileblock
-			//var idFb int32 //id/numero de ultimo fileblock para trabajar sobre ese
+			var idFb int32 //id/numero de ultimo fileblock para trabajar sobre ese
 			for _, item := range inodo.I_block {
 				if item != -1 {
 					Herramientas.ReadObject(file, &fileBlock, int64(superBloque.S_block_start+(item*int32(binary.Size(Structs.Fileblock{})))))
 						contenido += string(fileBlock.B_content[:])
-						//idFb = item
+						idFb = item
 				}
 			}
 
@@ -111,6 +112,91 @@ func Mkgrp(entrada []string) string{
 			}
 
 
+			//Buscar el ultimo ID activo desde el ultimo hasta el primero (ignorando los eliminado (0))
+			//desde -2 porque siempre se crea un salto de linea al final generando una linea vacia al final del arreglo
+			id := -1        //para guardar el nuevo ID
+			var errId error //para la conversion a numero del ID
+			for i := len(lineaID) - 2; i >= 0; i--{
+				registro := strings.Split(lineaID[i], ",")
+				//valido que sea un grupo
+				if registro[1] == "G"{
+					//valido que el id sea distinto a 0 (eliminado)
+					if registro[0] != "0"{
+						//convierto el id en numero para sumarle 1 y crear el nuevo id
+						id, errId = strconv.Atoi(registro[0])
+						if errId != nil {
+							fmt.Println("MKGRP ERROR: No se pudo obtener un nuevo id para el nuevo grupo")
+							return "MKGRP ERROR: No se pudo obtener un nuevo id para el nuevo grupo"
+						}
+						id++
+						break
+					}
+				}
+			}
+			
+
+			//valido que se haya encontrado un nuevo id
+			if id != -1 {				
+				contenidoActual := string(fileBlock.B_content[:])
+				posicionNulo := strings.IndexByte(contenidoActual, 0)
+				data := fmt.Sprintf("%d,G,%s\n", id, name)
+				//Aseguro que haya al menos un byte libre
+				if posicionNulo != -1 {
+					libre := 64 - (posicionNulo + len(data))
+					if libre > 0 {
+						copy(fileBlock.B_content[posicionNulo:], []byte(data))
+						//Escribir el fileblock con espacio libre
+						Herramientas.WriteObject(file, fileBlock, int64(superBloque.S_block_start+(idFb*int32(binary.Size(Structs.Fileblock{})))))
+					}else{
+						//Si es 0 (quedó exacta), entra aqui y crea un bloque vacío que podrá usarse para el proximo registro
+						data1 := data[:len(data)+libre]
+						//Ingreso lo que cabe en el bloque actual
+						copy(fileBlock.B_content[posicionNulo:], []byte(data1))
+						Herramientas.WriteObject(file, fileBlock, int64(superBloque.S_block_start+(idFb*int32(binary.Size(Structs.Fileblock{})))))
+
+						//Creo otro fileblock para el resto de la informacion
+						guardoInfo := true
+
+						for i, item := range inodo.I_block{
+							//i es el indice en el arreglo inodo.Iblock
+							if item == -1 {
+								guardoInfo = false
+								//agrego el apuntador del bloque al inodo
+								inodo.I_block[i] = superBloque.S_first_blo
+								//actualizo el superbloque
+								superBloque.S_free_blocks_count -= 1
+								superBloque.S_first_blo += 1
+								data2 := data[len(data)+libre:]
+								//crear nuevo fileblock
+								var newFileBlock Structs.Fileblock
+								copy(newFileBlock.B_content[:], []byte(data2))
+
+								//escribir las estructuras para guardar los cambios
+								// Escribir el superbloque
+								Herramientas.WriteObject(file, superBloque, int64(mbr.Partitions[part].Start))
+
+								//escribir el bitmap de bloques (se uso un bloque). inodo.I_block[i] contiene el numero de bloque que se uso
+								Herramientas.WriteObject(file, byte(1), int64(superBloque.S_bm_block_start+inodo.I_block[i]))
+
+								//escribir inodes (es el inodo 1, porque es donde esta users.txt)
+								Herramientas.WriteObject(file, inodo, int64(superBloque.S_inode_start+int32(binary.Size(Structs.Inode{}))))
+
+								//Escribir bloques
+								Herramientas.WriteObject(file, newFileBlock, int64(superBloque.S_block_start+(inodo.I_block[i]*int32(binary.Size(Structs.Fileblock{})))))
+								break
+							}
+						}
+
+						if guardoInfo {
+							fmt.Println("MKGRP ERROR: Espacio insuficiente para nuevo registro")
+							return "MKGRP ERROR: Espacio insuficiente para nuevo registro. "
+						}
+					}
+
+					fmt.Println("Se ha agregado el grupo '"+name+"' exitosamente. ")
+					return "Se ha agregado el grupo '"+name+"' exitosamente. "
+				}
+			}
 		}//FIn Add new Usuario	
 	}else{
 		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")

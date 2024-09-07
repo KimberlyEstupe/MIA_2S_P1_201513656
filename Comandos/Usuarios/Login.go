@@ -163,7 +163,7 @@ func Login(entrada []string) string{
 		}
 
 		if logeado{
-			respuesta += "Se ha iniciado sesion exitosamente! \n"
+			respuesta += "EL ususario '"+ user +"' ha iniciado sesion exitosamente! \n"
 			fmt.Println("IdPart: ", Structs.UsuarioActual.IdPart, " IdGr: ", Structs.UsuarioActual.IdGrp, " User: ", Structs.UsuarioActual.IdUsr, " Nombre: ", Structs.UsuarioActual.Nombre, " Status: ", Structs.UsuarioActual.Status)	
 		}else{
 			fmt.Println("ERROR AL INTENTAR INGRESAR, NO SE ENCONTRO EL USUARIO \nPOR FAVOR INGRESE LOS DATOS CORRECTOS")
