@@ -24,12 +24,12 @@ sudo apt update
 ```
 Si no funciona, reiniciar Visual Code
 
-### Utilizar otros documentos de go
+### Utilizar otros archivos de go
 ```sh
 go mod init
 ```
 Revisar go.mod y verificar el module, este sera la carpeta raiz para realizar las importaciones.  
-Las funciones que se importaran deben iniciar por una letra mayuscula
+Las funciones que se utilizaran en otros archivos deben iniciar por una letra mayuscula
 
 ### Cors
 ```sh
