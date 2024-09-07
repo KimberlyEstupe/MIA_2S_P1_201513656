@@ -7,6 +7,7 @@ type UserInfo struct {
 	IdUsr  	int32  //id del usuario
 	Nombre 	string //saber que usuario es (identifica si es root o cualquir otro)
 	Status 	bool   //si esta iniciada la sesion
+	PathD	string	//Path del disco
 }
 
 var UsuarioActual UserInfo
@@ -17,6 +18,7 @@ func SalirUsuario(){
 	UsuarioActual.IdUsr = 0
 	UsuarioActual.Nombre = ""
 	UsuarioActual.Status = false
+	UsuarioActual.PathD = ""
 }
 
 

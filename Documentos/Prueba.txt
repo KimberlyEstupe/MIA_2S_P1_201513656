@@ -3,11 +3,13 @@
 #git push origin main
 
 #mkdisk
-mkdisk -Size=300 -unit=K -path=Discos/Disco1.mia
-fdisk -Size=100 -fit=WF -path=Discos/Disco1.mia -name=Par1
-mount -path=Discos/Disco1.mia -name=Par1 #1A
+mkdisk -Size=300 -unit=K -path=Resultados/Discos/Disco1.mia
+fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
+
+mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
+mkgrp -name=usuarios
 
 #REPOSTES
 rep -id=561C -path=reports/rInode.txt -name=bm_inode

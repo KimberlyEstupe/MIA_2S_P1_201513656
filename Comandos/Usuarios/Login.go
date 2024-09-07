@@ -22,8 +22,8 @@ func Login(entrada []string) string{
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
-			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]+ "\n"
+			fmt.Println("ERROR LOGIN, valor desconocido de parametros ",valores[1])
+			respuesta += "ERROR LOGIN, valor desconocido de parametros " + valores[1]+ "\n"
 			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
@@ -125,7 +125,6 @@ func Login(entrada []string) string{
 		//leer los datos del user.txt
 		var contenido string
 		var fileBLock Structs.Fileblock
-
 		for _, item := range inodo.I_block {
 			if item != -1 {
 				Herramientas.ReadObject(file, &fileBLock, int64(superBloque.S_block_start+(item*int32(binary.Size(Structs.Fileblock{})))))
@@ -136,8 +135,6 @@ func Login(entrada []string) string{
 		//separa el contenido de user.txt
 		linea := strings.Split(contenido, "\n")
 		//UID, TIPO, GRUPO, USUARIO, CONTRASEÑA
-
-		fmt.Println(linea)
 
 		logeado := false
 		for _,reglon := range linea{
@@ -151,6 +148,7 @@ func Login(entrada []string) string{
 							Structs.UsuarioActual.IdPart = id
 							Structs.UsuarioActual.Nombre = user
 							Structs.UsuarioActual.Status = true
+							Structs.UsuarioActual.PathD = pathDico
 							Add_idUsr(Usuario[0])
 							logeado = true		
 							Search_IdGrp(linea, Usuario[2])					
@@ -164,13 +162,13 @@ func Login(entrada []string) string{
 			}
 		}
 
-		if !logeado{
-			fmt.Println("")
+		if logeado{
+			respuesta += "Se ha iniciado sesion exitosamente! \n"
+			fmt.Println("IdPart: ", Structs.UsuarioActual.IdPart, " IdGr: ", Structs.UsuarioActual.IdGrp, " User: ", Structs.UsuarioActual.IdUsr, " Nombre: ", Structs.UsuarioActual.Nombre, " Status: ", Structs.UsuarioActual.Status)	
+		}else{
+			fmt.Println("ERROR AL INTENTAR INGRESAR, NO SE ENCONTRO EL USUARIO \nPOR FAVOR INGRESE LOS DATOS CORRECTOS")
 			respuesta += "ERROR AL INTENTAR INGRESAR, NO SE ENCONTRO EL USUARIO \n"
 			respuesta+= "POR FAVOR INGRESE LOS DATOS CORRECTOS \n"
-		}else{
-			respuesta += "Se ha iniciado sesion exitosamente! \n"
-			fmt.Println("IdPart ", Structs.UsuarioActual.IdPart, " IdGr ", Structs.UsuarioActual.IdGrp, " User ", Structs.UsuarioActual.IdUsr, " Nombre ", Structs.UsuarioActual.Nombre, " Status ", Structs.UsuarioActual.Status)	
 		}
 	}
 

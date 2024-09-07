@@ -161,14 +161,13 @@ func Analizar(entrada string) (string){
 		}
 	
 	}else if strings.ToLower(parametros[0])=="logout"{		
-		fmt.Println("")
 		respuesta = Us.Logout()
 
-	}else if strings.ToLower(parametros[0])=="otros"{		
+	}else if strings.ToLower(parametros[0])=="mkgrp"{		
 		if len(parametros)>1{			
-			fmt.Println("")
+			respuesta = Us.Mkgrp(parametros)
 		}else{
-			fmt.Println("ERROR EN UNMOUNT, FALTAN PARAMETROS")
+			fmt.Println("ERROR EN MKGRP, FALTAN PARAMETROS")
 		}
 
 	// *============================* OTROS *============================*
