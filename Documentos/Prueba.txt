@@ -35,3 +35,16 @@ rep -id=561C -path=reports/rBloque.txt -name=bm_bloc
 rep -id=561A -path=reports/rBloque2.txt -name=bm_bloc
 rep -id=561B -path=reports/rBloque1.txt -name=bm_bloc
 
+Holis como estas?
+Como los esta tratando el semestre?
+Yo entrando en panico jaja 
+
+Aca esta mi proyecto de archivos, ya voy terminando el rmusr que es el ultimo de usuarios
+De reportes llevo el mbr, disk, sb, bm_inode y bm_bloque
+
+Se supone que entregamos hoy, pedimos prorroga y se supone que hasta el lunes, ahorita el aux dijo que para el jueve
+Yo podria suponer que es hasta el lunes(esa fecha marca en uedi) pero o nos califica lo que tengamos hasta el jueve o lo que tengamos hasta la fecha de entregamos
+
+Nos dijo que nos va a calificar un archivo de entrada hecho por nosotros y hoy nos enseño a hacer el reporte file solo con el archivo user.txt
+
+

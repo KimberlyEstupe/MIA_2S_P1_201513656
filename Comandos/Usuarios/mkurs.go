@@ -198,9 +198,6 @@ func Mkusr(entrada []string) string {
 
 			//valido que se haya encontrado un nuevo id
 			if id != -1 {
-				for k:=0; k<len(lineaID)-1; k++{
-					fmt.Println(lineaID[k])
-				}
 				contenidoActual := string(fileBlock.B_content[:])
 				posicionNulo := strings.IndexByte(contenidoActual, 0)
 				data := fmt.Sprintf("%d,U,%s,%s,%s\n", id, grp, user, pass)
@@ -257,6 +254,9 @@ func Mkusr(entrada []string) string {
 						}
 					}
 				}
+			}
+			for k:=0; k<len(lineaID)-1; k++{
+				fmt.Println(lineaID[k])
 			}
 			fmt.Println("Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. ")
 			return "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. "

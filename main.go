@@ -186,7 +186,7 @@ func Analizar(entrada string) (string){
 
 	}else if strings.ToLower(parametros[0])=="rmusr"{		
 		if len(parametros)>1{			
-			respuesta = "comando rmusr"
+			respuesta = Us.Rmusr(parametros)
 		}else{
 			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
 		}

@@ -39,22 +39,22 @@ func Rmgrp(entrada []string) string {
 			}
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
-			fmt.Println("LOGIN ERROR: Parametro desconocido: ", valores[0])
+			fmt.Println("RMGRP ERROR: Parametro desconocido: ", valores[0])
 			//por si en el camino reconoce algo invalido de una vez se sale
-			return "LOGIN ERROR: Parametro desconocido: "+valores[0] + "\n"
+			return "RMGRP ERROR: Parametro desconocido: "+valores[0] + "\n"
 		}
 	}
 
 	if UsuarioA.Nombre == "root"{
 		file, err := Herramientas.OpenFile(UsuarioA.PathD)
 		if err != nil {
-			return "ERROR REP SB OPEN FILE "+err.Error()+ "\n"
+			return "RMGRP ERRORSB OPEN FILE "+err.Error()+ "\n"
 		}
 
 		var mbr Structs.MBR
 		// Read object from bin file
 		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-			return "ERROR REP SB READ FILE "+err.Error()+ "\n"
+			return "RMGRP ERRORSB READ FILE "+err.Error()+ "\n"
 		}
 
 		// Close bin file
@@ -76,8 +76,8 @@ func Rmgrp(entrada []string) string {
 			var superBloque Structs.Superblock
 			errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
 			if errREAD != nil {
-				fmt.Println("REP Error. Particion sin formato")
-				return "REP Error. Particion sin formato"+ "\n"
+				fmt.Println("RMGRP ERROR. Particion sin formato")
+				return "RMGRP ERROR. Particion sin formato"+ "\n"
 			}
 
 			var inodo Structs.Inode		
@@ -114,13 +114,14 @@ func Rmgrp(entrada []string) string {
 			}
 
 			if modificarUs{
+				//MODIFICA LOS USUARIOS DE ESE GRUPO
 				for k:=0; k<len(lineaID); k++{
 					datos := strings.Split(lineaID[k], ",")
 					if len(datos) ==5{
 						if datos[2] == name{
 							if datos[0] != "0"{
 								datos[0]="0"
-								lineaID[k] = datos[0] + "," + datos[1] + "," + datos[2]
+								lineaID[k] = datos[0] + "," + datos[1] + "," + datos[2]+ "," + datos[3]+ "," + datos[4]
 							}
 						}
 					}
@@ -164,14 +165,16 @@ func Rmgrp(entrada []string) string {
 
 				fmt.Println("El grupo '"+name+"' fue eliminado con extiso")
 				respuesta += "El grupo '"+name+"' fue eliminado con extiso"
-				fmt.Println(lineaID)
+				for k:=0; k<len(lineaID)-1; k++{
+					fmt.Println(lineaID[k])
+				}
 				return respuesta
 			}			
 		}
 
 	}else{
 		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
-		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
+		respuesta += "RMGRP ERROR: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
 	}
 	
 	return respuesta
