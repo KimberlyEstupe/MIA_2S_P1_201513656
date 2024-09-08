@@ -13,8 +13,18 @@ mkgrp -name=usuarios
 mkgrp -name=usu1
 mkgrp -name=usu2
 
-rmgrp -name=usu2
-rmgrp -name=usuarios
+mkusr -user=user1 -pass=pass1 -grp=usuarios
+mkusr -user=user2 -pass=proyecto -grp=usu2
+mkusr -user=user3 -pass=usuario -grp=usu1
+
+logout
+login -user=user3 -pass=usuario -id=561A
+mkgrp -name=usu3
+mkgrp -name=usuarios
+mkusr -user=userP1 -pass=p1 -grp=usu3
+logout
+
+login -user=user1 -pass=pass1 -id=561A
 
 #REPOSTES
 rep -id=561C -path=reports/rInode.txt -name=bm_inode

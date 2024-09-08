@@ -9,54 +9,105 @@ import (
 	"strings"
 )
 
-func Mkgrp(entrada []string) string{
+func Mkusr(entrada []string) string {
 	var respuesta string
-	var name string
+	var user string //obligatorio (max 10 caracteres)
+	var pass string //obligatorio (max 10 caracteres)
+	var grp string  //obligatorio (max 10 caracteres)
+	Valido := true
 	UsuarioA := Structs.UsuarioActual
-	
-	if !UsuarioA.Status {
-		respuesta += "ERROR MKGRP: NO HAY SECION INICIADA"+ "\n"
-		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR"+ "\n"
-		return respuesta
-	}
 
-	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
-		valores := strings.Split(tmp,"=")
+	for _, parametro := range entrada[1:] {
+		tmp := strings.TrimRight(parametro, "")
+		valores := strings.Split(tmp, "=")
 
-		if len(valores)!=2{
-			fmt.Println("ERROR MKGRP, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKGRP, valor desconocido de parametros " + valores[1]+ "\n"
+		if len(valores) != 2 {
+			fmt.Println("ERROR MKGRP, valor desconocido de parametros ", valores[1])
+			respuesta += "ERROR MKGRP, valor desconocido de parametros " + valores[1] + "\n"
+			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
 		}
 
-		//********************  NAME *****************
-		if strings.ToLower(valores[0]) == "name" {
-			name = (valores[1])
+		//******************** GRUP *****************
+		if strings.ToLower(valores[0]) == "grp" {
+			grp = (valores[1])
 			//validar maximo 10 caracteres
-			if len(name) > 10 {
-				fmt.Println("MKGRP ERROR: name debe tener maximo 10 caracteres")
-				return "ERROR MKGRP: name debe tener maximo 10 caracteres"
+			if len(grp) > 10 {
+				Valido = false
+				fmt.Println("MKGRP ERROR: grp debe tener maximo 10 caracteres")
+				return "ERROR MKGRP: grp debe tener maximo 10 caracteres"
 			}
-		//******************* ERROR EN LOS PARAMETROS *************
+			//********************  USER *****************
+		} else if strings.ToLower(valores[0]) == "user" {
+			user = valores[1]
+			//validar maximo 10 caracteres
+			if len(user) > 10 {
+				Valido = false
+				fmt.Println("MKGRP ERROR: user debe tener maximo 10 caracteres")
+				return "ERROR MKGRP: user debe tener maximo 10 caracteres"
+			}
+			//******************** PASS *****************
+		} else if strings.ToLower(valores[0]) == "pass" {
+			pass = valores[1]
+			//validar maximo 10 caracteres
+			if len(pass) > 10 {
+				Valido = false
+				fmt.Println("MKGRP ERROR: pass debe tener maximo 10 caracteres")
+				return "ERROR MKGRP: pass debe tener maximo 10 caracteres"
+			}
+			//******************* ERROR EN LOS PARAMETROS *************
 		} else {
-			fmt.Println("LOGIN ERROR: Parametro desconocido: ", valores[0])
+			Valido = false
+			fmt.Println("MKUSR ERROR: Parametro desconocido: ", valores[0])
 			//por si en el camino reconoce algo invalido de una vez se sale
-			return "LOGIN ERROR: Parametro desconocido: "+valores[0] + "\n"
+			return "MKUSR ERROR: Parametro desconocido: " + valores[0] + "\n"
 		}
 	}
 
-	if UsuarioA.Nombre == "root"{
+	// ------------ COMPROBACIONES DE PARAMETROS OBLIGATORIOS---------------
+	if pass == "" {
+		Valido = false
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO PASS ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO PASS " + "\n"
+	}
+
+	if user == "" {
+		Valido = false
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
+	}
+
+	if grp == "" {
+		Valido = false
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO GRP ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO GRP " + "\n"
+	}
+
+	if !UsuarioA.Status {
+		Valido = false
+		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
+		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
+		return respuesta
+	}
+
+	if UsuarioA.Nombre != "root" {
+		Valido = false
+		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
+		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
+		return respuesta
+	}
+
+	if Valido {
 		file, err := Herramientas.OpenFile(UsuarioA.PathD)
 		if err != nil {
-			return "ERROR REP SB OPEN FILE "+err.Error()+ "\n"
+			return "ERROR MKUSR ERROR SB OPEN FILE " + err.Error() + "\n"
 		}
 
 		var mbr Structs.MBR
 		// Read object from bin file
 		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-			return "ERROR REP SB READ FILE "+err.Error()+ "\n"
+			return "ERROR MKUSR ERROR SB READ FILE " + err.Error() + "\n"
 		}
 
 		// Close bin file
@@ -65,7 +116,7 @@ func Mkgrp(entrada []string) string{
 		//Encontrar la particion correcta
 		AddNewUser := false
 		part := -1
-		for i := 0; i < 4; i++ {		
+		for i := 0; i < 4; i++ {
 			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
 			if identificador == UsuarioA.IdPart {
 				part = i
@@ -74,18 +125,18 @@ func Mkgrp(entrada []string) string{
 			}
 		}
 
-		if AddNewUser{
+		if AddNewUser {
 			var superBloque Structs.Superblock
 			errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
 			if errREAD != nil {
-				fmt.Println("REP Error. Particion sin formato")
-				return "REP Error. Particion sin formato"+ "\n"
+				fmt.Println("MKUSR Error. Particion sin formato")
+				return "MKUSR Error. Particion sin formato" + "\n"
 			}
 
-			var inodo Structs.Inode		
+			var inodo Structs.Inode
 			//Le agrego una structura de inodo para ver el user.txt que esta en el primer inodo del sb
-			Herramientas.ReadObject(file, &inodo, int64(superBloque.S_inode_start + int32(binary.Size(Structs.Inode{}))))
-			
+			Herramientas.ReadObject(file, &inodo, int64(superBloque.S_inode_start+int32(binary.Size(Structs.Inode{}))))
+
 			//leer los datos del user.txt
 			var contenido string
 			var fileBlock Structs.Fileblock
@@ -93,53 +144,67 @@ func Mkgrp(entrada []string) string{
 			for _, item := range inodo.I_block {
 				if item != -1 {
 					Herramientas.ReadObject(file, &fileBlock, int64(superBloque.S_block_start+(item*int32(binary.Size(Structs.Fileblock{})))))
-						contenido += string(fileBlock.B_content[:])
-						idFb = item
+					contenido += string(fileBlock.B_content[:])
+					idFb = item
 				}
 			}
 
 			lineaID := strings.Split(contenido, "\n")
 
-			//Verificar si el grupo ya existe
+			ExGrupo := false
 			for _, registro := range lineaID[:len(lineaID)-1] {
 				datos := strings.Split(registro, ",")
+				//verificamos que el grupo exista
 				if len(datos) == 3 {
-					if datos[2] == name {
-						fmt.Println("MKGRP ERROR: El grupo ya existe")
-						return "MKGRP ERROR: El grupo ya existe"
+					if datos[2] == grp {
+						ExGrupo = true
+						break
+					}
+					//Verificamos que el usuario no exista
+				} else if len(datos) == 5 {
+					if datos[3] == user {
+						fmt.Println("MKUSR ERROR: ESTE USUARIO YA EXISTE")
+						return "MKUSR ERROR: ESTE USUARIO YA EXISTE"
 					}
 				}
 			}
 
+			if !ExGrupo {
+				fmt.Println("NO EXISTE EL GRUPO EN MKURS")
+				return "MKURS ERROR, NO EXISTE EL GRUPO, POR FAVOR INGRESE UN GRUPO QUE SI EXISTA"
+			}
 
 			//Buscar el ultimo ID activo desde el ultimo hasta el primero (ignorando los eliminado (0))
 			//desde -2 porque siempre se crea un salto de linea al final generando una linea vacia al final del arreglo
 			id := -1        //para guardar el nuevo ID
 			var errId error //para la conversion a numero del ID
-			for i := len(lineaID) - 2; i >= 0; i--{
+			for i := len(lineaID) - 2; i >= 0; i-- {
 				registro := strings.Split(lineaID[i], ",")
-				//valido que sea un grupo
-				if registro[1] == "G"{
+				//valido que sea un usuario
+				if registro[1] == "U" {
 					//valido que el id sea distinto a 0 (eliminado)
-					if registro[0] != "0"{
+					if registro[0] != "0" {
 						//convierto el id en numero para sumarle 1 y crear el nuevo id
 						id, errId = strconv.Atoi(registro[0])
 						if errId != nil {
-							fmt.Println("MKGRP ERROR: No se pudo obtener un nuevo id para el nuevo grupo")
-							return "MKGRP ERROR: No se pudo obtener un nuevo id para el nuevo grupo"
+							fmt.Println("MKUSR ERROR: NO SE PUDO OBTENER UN NUEVO ID PARA EL NUEVO GRUPO")
+							return "MKUSR ERROR: NO SE PUDO OBTENER UN NUEVO ID PARA EL NUEVO GRUPO"
 						}
 						id++
 						break
 					}
 				}
 			}
-			
 
 			//valido que se haya encontrado un nuevo id
-			if id != -1 {				
+			if id != -1 {
+				for k:=0; k<len(lineaID)-1; k++{
+					fmt.Println(lineaID[k])
+				}
 				contenidoActual := string(fileBlock.B_content[:])
 				posicionNulo := strings.IndexByte(contenidoActual, 0)
-				data := fmt.Sprintf("%d,G,%s\n", id, name)
+				data := fmt.Sprintf("%d,U,%s,%s,%s\n", id, grp, user, pass)
+
 				//Aseguro que haya al menos un byte libre
 				if posicionNulo != -1 {
 					libre := 64 - (posicionNulo + len(data))
@@ -147,7 +212,7 @@ func Mkgrp(entrada []string) string{
 						copy(fileBlock.B_content[posicionNulo:], []byte(data))
 						//Escribir el fileblock con espacio libre
 						Herramientas.WriteObject(file, fileBlock, int64(superBloque.S_block_start+(idFb*int32(binary.Size(Structs.Fileblock{})))))
-					}else{
+					} else {
 						//Si es 0 (quedó exacta), entra aqui y crea un bloque vacío que podrá usarse para el proximo registro
 						data1 := data[:len(data)+libre]
 						//Ingreso lo que cabe en el bloque actual
@@ -156,8 +221,7 @@ func Mkgrp(entrada []string) string{
 
 						//Creo otro fileblock para el resto de la informacion
 						guardoInfo := true
-
-						for i, item := range inodo.I_block{
+						for i, item := range inodo.I_block {
 							//i es el indice en el arreglo inodo.Iblock
 							if item == -1 {
 								guardoInfo = false
@@ -188,29 +252,17 @@ func Mkgrp(entrada []string) string{
 						}
 
 						if guardoInfo {
-							fmt.Println("MKGRP ERROR: Espacio insuficiente para nuevo registro")
-							return "MKGRP ERROR: Espacio insuficiente para nuevo registro. "
+							fmt.Println("MKUSR ERROR: ESPACIO INSUFICIENTE PARA EL NUEVO USUARIO")
+							return "MKUSR ERROR: ESPACIO INSUFICIENTE PARA EL NUEVO USUARIO. "
 						}
 					}
-
-					
-					fmt.Println("Se ha agregado el grupo '"+name+"' exitosamente. ")
-					for k:=0; k<len(lineaID)-1; k++{
-						fmt.Println(lineaID[k])
-					}
-					return "Se ha agregado el grupo '"+name+"' exitosamente. "
 				}
 			}
-		//FIn Add new Usuario
-		}else{	
-			fmt.Println("ERROR INESPERADO CON LA PARCION EN MKGRP")
-			respuesta += "ERROR INESPERADO CON LA PARCION EN MKGRP"
-		}
-
-	}else{
-		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
-		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
+			fmt.Println("Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. ")
+			return "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. "
+			
+		} //FIn Add new Usuario
 	}
 
-	return respuesta	
+	return respuesta
 }

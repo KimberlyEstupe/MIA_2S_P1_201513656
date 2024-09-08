@@ -176,6 +176,20 @@ func Analizar(entrada string) (string){
 		}else{
 			fmt.Println("ERROR EN RMGRP, FALTAN PARAMETROS")
 		}
+	
+	}else if strings.ToLower(parametros[0])=="mkusr"{		
+		if len(parametros)>1{			
+			respuesta = Us.Mkusr(parametros)
+		}else{
+			fmt.Println("ERROR EN RMGRP, FALTAN PARAMETROS")
+		}	
+
+	}else if strings.ToLower(parametros[0])=="rmusr"{		
+		if len(parametros)>1{			
+			respuesta = "comando rmusr"
+		}else{
+			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
+		}
 
 	// *============================* OTROS *============================*
 	} else if strings.ToLower(parametros[0]) == "rep" {
