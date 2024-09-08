@@ -8,40 +8,60 @@ import (
 	"strings"
 )
 
-func Rmusr(entrada []string) string{
+func Chgrp(entrada []string) string{
 	var respuesta string
 	var user string
+	var grp string
 	Valido := true
 	UsuarioA := Structs.UsuarioActual
-	
-	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
-		valores := strings.Split(tmp,"=")
 
-		if len(valores)!=2{
-			fmt.Println("ERROR MKGRP, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKGRP, valor desconocido de parametros " + valores[1]+ "\n"
+	for _,parametro :=range entrada[1:]{
+		tmp := strings.TrimRight(parametro, "")
+		valores := strings.Split(tmp, "=")
+
+		if len(valores) != 2 {
+			fmt.Println("ERROR MKGRP, valor desconocido de parametros ", valores[1])
+			respuesta += "ERROR MKGRP, valor desconocido de parametros " + valores[1] + "\n"
+			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
 		}
 
-		//******************** USER *****************
-		if strings.ToLower(valores[0]) == "user" {
-			user = (valores[1])
+		//******************** GRUP *****************
+		if strings.ToLower(valores[0]) == "grp" {
+			grp = (valores[1])
+			//validar maximo 10 caracteres
+			if len(grp) > 10 {
+				Valido = false
+				fmt.Println("CHGRP ERROR: grp debe tener maximo 10 caracteres")
+				return "ERROR MKGRP: grp debe tener maximo 10 caracteres"
+			}
+			//********************  USER *****************
+		} else if strings.ToLower(valores[0]) == "user" {
+			user = valores[1]
 			//validar maximo 10 caracteres
 			if len(user) > 10 {
-				fmt.Println("MKGRP ERROR: user debe tener maximo 10 caracteres")
+				Valido = false
+				fmt.Println("CHGRP ERROR: user debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: user debe tener maximo 10 caracteres"
 			}
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
-			fmt.Println("LOGIN ERROR: Parametro desconocido: ", valores[0])
+			Valido = false
+			fmt.Println("CHGRP ERROR: Parametro desconocido: ", valores[0])
 			//por si en el camino reconoce algo invalido de una vez se sale
-			return "LOGIN ERROR: Parametro desconocido: "+valores[0] + "\n"
+			return "CHGRP ERROR: Parametro desconocido: " + valores[0] + "\n"
 		}
 	}
+
 	// ------------ COMPROBACIONES DE PARAMETROS OBLIGATORIOS---------------
 	if user == "" {
+		Valido = false
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
+	}
+
+	if grp == "" {
 		Valido = false
 		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
 		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
@@ -76,18 +96,18 @@ func Rmusr(entrada []string) string{
 	defer file.Close()
 
 	//Encontrar la particion correcta
-	delete := false
+	continuar := false
 	part := -1 //particion a utilizar y modificar
 	for i := 0; i < 4; i++ {		
 		identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
 		if identificador == UsuarioA.IdPart {
 			part = i
-			delete = true
+			continuar = true
 			break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
 		}
 	}
 
-	if Valido && delete {
+	if Valido && continuar{
 		var superBloque Structs.Superblock
 		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
 		if errREAD != nil {
@@ -110,24 +130,42 @@ func Rmusr(entrada []string) string{
 		}
 		
 		lineaID := strings.Split(contenido, "\n")
-		modificadoUsr := false
+		//BUscar si el grupo existe
+		ExGrupo := false
+		for _, registro := range lineaID[:len(lineaID)-1] {
+			datos := strings.Split(registro, ",")
+			//verificamos que el grupo exista
+			if len(datos) == 3 {
+				if datos[2] == grp {
+					ExGrupo = true
+					break
+				}
+			}
+		}
+
+		if !ExGrupo {
+			fmt.Println("NO EXISTE EL GRUPO EN MKURS")
+			return "CHGRP ERROR, NO EXISTE EL GRUPO, POR FAVOR INGRESE UN GRUPO QUE SI EXISTA"
+		}
+
+		chGro := false
 		for k:=0; k<len(lineaID); k++{
 			datos := strings.Split(lineaID[k], ",")
 			if len(datos) ==5{
 				if datos[3] == user{
 					if datos[0] != "0"{
-						datos[0]="0"
-						modificadoUsr = true
+						chGro = true
+						datos[2] = grp
 						lineaID[k] = datos[0] + "," + datos[1] + "," + datos[2]+ "," + datos[3]+ "," + datos[4]
 					}else{
-						fmt.Println("ERROR RMUSR, EL USUARIO '"+user+"' ya fue eliminado previamente")
-						return "ERROR RMUSR, EL USUARIO '"+user+"' ya fue eliminado previamente"
+						fmt.Println("ERROR RMUSR, EL USUARIO '"+user+"' fue eliminado ")
+						return "ERROR RMUSR, EL USUARIO '"+user+"' fue eliminado "
 					}
 				}
 			}
 		}
 
-		if modificadoUsr{
+		if chGro{
 			mod := ""
 			for _, reg := range lineaID {
 				mod += reg + "\n"
@@ -163,19 +201,16 @@ func Rmusr(entrada []string) string{
 				}
 			}
 
-			fmt.Println("El grupo '"+user+"' fue eliminado con extiso")
-			respuesta += "El grupo '"+user+"' fue eliminado con extiso"
+			fmt.Println("El usuario '"+user+"' fue cambiado al grupo '"+grp+"' exitosamente")
+			respuesta += "El usuario '"+user+"' fue cambiado al grupo '"+grp+"' exitosamente"
 			for k:=0; k<len(lineaID)-1; k++{
 				fmt.Println(lineaID[k])
 			}
-			return respuesta				
-		}else{
-			fmt.Println("ERROR RMUSR NO SE PUDO ENCONTRAR EL USUARIO")
-			return "ERROR RMUSR NO SE PUDO ENCONTRAR EL USUARIO"
+			return respuesta
 		}
-	}else{
-		fmt.Println("ERROR RMUSR ALGO SALIO MAL CON LAS PARTICIONES")
-		respuesta += "ERROR RMUSR ALGO SALIO MAL CON LAS PARTICIONES"
+
+		
 	}
+	
 	return respuesta
 }

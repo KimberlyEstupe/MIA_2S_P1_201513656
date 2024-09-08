@@ -191,6 +191,13 @@ func Analizar(entrada string) (string){
 			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
 		}
 
+	}else if strings.ToLower(parametros[0])=="chgrp"{		
+		if len(parametros)>1{			
+			respuesta = Us.Chgrp(parametros)
+		}else{
+			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
+		}
+
 	// *============================* OTROS *============================*
 	} else if strings.ToLower(parametros[0]) == "rep" {
 		//REP

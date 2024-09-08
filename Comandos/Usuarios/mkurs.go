@@ -38,7 +38,7 @@ func Mkusr(entrada []string) string {
 				fmt.Println("MKGRP ERROR: grp debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: grp debe tener maximo 10 caracteres"
 			}
-			//********************  USER *****************
+		//********************  USER *****************
 		} else if strings.ToLower(valores[0]) == "user" {
 			user = valores[1]
 			//validar maximo 10 caracteres
@@ -47,7 +47,7 @@ func Mkusr(entrada []string) string {
 				fmt.Println("MKGRP ERROR: user debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: user debe tener maximo 10 caracteres"
 			}
-			//******************** PASS *****************
+		//******************** PASS *****************
 		} else if strings.ToLower(valores[0]) == "pass" {
 			pass = valores[1]
 			//validar maximo 10 caracteres
@@ -56,7 +56,7 @@ func Mkusr(entrada []string) string {
 				fmt.Println("MKGRP ERROR: pass debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: pass debe tener maximo 10 caracteres"
 			}
-			//******************* ERROR EN LOS PARAMETROS *************
+		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
 			Valido = false
 			fmt.Println("MKUSR ERROR: Parametro desconocido: ", valores[0])
