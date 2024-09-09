@@ -17,8 +17,13 @@ func Login(entrada []string) string{
 	Valido := true
 	var pathDico string
 
+	if Structs.UsuarioActual.Status {
+		Valido = false
+		return "LOGIN ERROR: Ya existe una sesion iniciada, cierre sesion para iniciar otra"
+	}
+
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
@@ -60,7 +65,7 @@ func Login(entrada []string) string{
 		}
 		if pathDico == ""{
 			Valido = false
-			return "ERROR MB_INODE: ID NO ENCONTRADO"+ "\n"
+			return "ERROR LOGIN: ID NO ENCONTRADO"+ "\n"
 		}
 	}else{
 		fmt.Println("LOGIN ERROR: FALTO EL PARAMETRO ID ")
@@ -81,12 +86,6 @@ func Login(entrada []string) string{
 	}
 
 	if Valido{
-		//verificar que no hayan iniciado sesion
-		if Structs.UsuarioActual.Status {
-			fmt.Println("LOGIN ERROR: Ya existe una sesion iniciada, cierre sesion para iniciar otra")
-			return "LOGIN ERROR: Ya existe una sesion iniciada, cierre sesion para iniciar otra"+ "\n"
-		}
-
 		file, err := Herramientas.OpenFile(pathDico)
 		if err != nil {
 			return "ERROR REP SB OPEN FILE "+err.Error()+ "\n"

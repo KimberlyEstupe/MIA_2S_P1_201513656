@@ -8,7 +8,8 @@ fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
 
 mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
-login -user=root -pass=123 -id=561A
+
+login -user=root -pass=123 -id=562A
 mkgrp -name=usuarios
 mkgrp -name=usu1
 mkgrp -name=usu2
@@ -18,7 +19,7 @@ mkusr -user=user2 -pass=proyecto -grp=usu2
 mkusr -user=user3 -pass=usuario -grp=usu1
 
 logout
-login -user=user3 -pass=usuario -id=561A
+login -user=root -pass=123 -id=561B
 mkgrp -name=usu3
 mkgrp -name=usuarios
 mkusr -user=userP1 -pass=p1 -grp=usu3
@@ -34,17 +35,3 @@ rep -id=561B -path=reports/rInode1.txt -name=bm_inode
 rep -id=561C -path=reports/rBloque.txt -name=bm_bloc
 rep -id=561A -path=reports/rBloque2.txt -name=bm_bloc
 rep -id=561B -path=reports/rBloque1.txt -name=bm_bloc
-
-Holis como estas?
-Como los esta tratando el semestre?
-Yo entrando en panico jaja 
-
-Aca esta mi proyecto de archivos, ya voy terminando el rmusr que es el ultimo de usuarios
-De reportes llevo el mbr, disk, sb, bm_inode y bm_bloque
-
-Se supone que entregamos hoy, pedimos prorroga y se supone que hasta el lunes, ahorita el aux dijo que para el jueve
-Yo podria suponer que es hasta el lunes(esa fecha marca en uedi) pero o nos califica lo que tengamos hasta el jueve o lo que tengamos hasta la fecha de entregamos
-
-Nos dijo que nos va a calificar un archivo de entrada hecho por nosotros y hoy nos enseño a hacer el reporte file solo con el archivo user.txt
-
-

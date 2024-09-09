@@ -17,13 +17,13 @@ func Rep(entrada []string) string{
 	Valido := true 
 
 	for _, parametro := range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
-			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
+			fmt.Println("ERROR REP, valor desconocido de parametros ",valores[1])
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
-			break
+			return "ERROR REP, valor desconocido de parametros "+valores[1]
 		}
 
 		if strings.ToLower(valores[0]) == "name" {
@@ -97,7 +97,10 @@ func Rmbr (path string, id string) string{
 
 	if Valido{
 		tmp := strings.Split(path, "/")
-		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+		
+		tmp = strings.Split(pathDico, "/")
+		NOmbreDis := strings.Split(tmp[len(tmp)-1], ".")[0]
 		
 		file, err := Herramientas.OpenFile(pathDico)
 		if err != nil {
@@ -126,8 +129,7 @@ func Rmbr (path string, id string) string{
 		rutaReporte := carpeta + "/" + nombre + ".dot"
 
 		Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
-
-		Respuesta += "Reporte de MBR/EBR ejecutado"
+		Respuesta += "Reporte de MBR del disco "+NOmbreDis+" creado con el nombre "+nombre+".png"
 	}else{
 		Respuesta += "ERROR: EL ID INGRESADO NO EXISTE"
 	}
@@ -153,7 +155,10 @@ func disk(path string, id string)string{
 
 	if Valido{
 		tmp := strings.Split(path, "/")
-		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]	
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+		
+		tmp = strings.Split(pathDico, "/")
+		NOmbreDis := strings.Split(tmp[len(tmp)-1], ".")[0]
 		
 		file, err := Herramientas.OpenFile(pathDico)
 		if err != nil {
@@ -182,7 +187,7 @@ func disk(path string, id string)string{
 		fmt.Println("RP ", rutaReporte," name ",nombre)
 
 		Herramientas.RepGraphizMBR(rutaReporte, cad, nombre)
-		Respuesta += "Reporte de Disk ejecutado"
+		Respuesta += "Reporte Disk del disco "+NOmbreDis+" creado con el nombre "+nombre+".png"
 	}else{
 		Respuesta += "ERROR: EL ID INGRESADO NO EXISTE"
 	}

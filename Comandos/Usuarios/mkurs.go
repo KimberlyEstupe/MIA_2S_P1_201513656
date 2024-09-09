@@ -17,8 +17,22 @@ func Mkusr(entrada []string) string {
 	Valido := true
 	UsuarioA := Structs.UsuarioActual
 
+	if !UsuarioA.Status {
+		Valido = false
+		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
+		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
+		return respuesta
+	}
+
+	if UsuarioA.Nombre != "root" {
+		Valido = false
+		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
+		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
+		return respuesta
+	}
+
 	for _, parametro := range entrada[1:] {
-		tmp := strings.TrimRight(parametro, "")
+		tmp := strings.TrimRight(parametro, " ")
 		valores := strings.Split(tmp, "=")
 
 		if len(valores) != 2 {
@@ -27,7 +41,7 @@ func Mkusr(entrada []string) string {
 			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
-		}
+		}		
 
 		//******************** GRUP *****************
 		if strings.ToLower(valores[0]) == "grp" {
@@ -82,20 +96,6 @@ func Mkusr(entrada []string) string {
 		Valido = false
 		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO GRP ")
 		return "MKUSR ERROR: FALTO EL PARAMETRO GRP " + "\n"
-	}
-
-	if !UsuarioA.Status {
-		Valido = false
-		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
-		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
-		return respuesta
-	}
-
-	if UsuarioA.Nombre != "root" {
-		Valido = false
-		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
-		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
-		return respuesta
 	}
 
 	if Valido {

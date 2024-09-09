@@ -77,14 +77,16 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 				linea := strings.Split(lector.Text(), "#") //lector.Text() retorna la linea leida
 				if len(linea[0]) != 0 {
 					fmt.Println("\n*********************************************************************************************")
-					fmt.Println("Linea en ejecucion: ", linea[0])
-					respuesta += "*------------------------------------------------------------------------------------------*\n"
-					respuesta += "Linea en ejecucion: " + linea[0] + "\n"
+					fmt.Println("Comando en ejecucion: ", linea[0])
+					respuesta += "***************************************************************************************************************************\n"
+					respuesta += "Comando en ejecucion: " + linea[0] + "\n"
 					respuesta += Analizar(linea[0])  + "\n"
-				}				
-				/*if len(linea[1]) > 0 {
+				}	
+				//Comentarios			
+				if len(linea) > 1 && linea[1] != "" {
+					fmt.Println("#"+linea[1] +"\n")
 					respuesta += "#"+linea[1] +"\n"
-				}*/
+				}
 			}
 			
 		}
@@ -104,9 +106,11 @@ func getCadenaAnalizar(w http.ResponseWriter, r *http.Request) {
 
 
 func Analizar(entrada string) (string){
-	respuesta := "Respuesta vacia"
+	respuesta := ""
+	//Quitar espacios en blanco del final
+	tmp := strings.TrimRight(entrada," ")
 	//Recibe una linea y la descompone entre el comando y sus parametros
-	parametros:= strings.Split(entrada, " -")
+	parametros:= strings.Split(tmp, " -")
 
 	// *============================* ADMINISTRACION DE DISCOS *============================*
 	if strings.ToLower(parametros[0])=="mkdisk"{

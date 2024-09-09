@@ -17,13 +17,13 @@ func MKfs(entrada []string) (string){
 	var pathDico string
 
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
 			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
 			respuesta += "ERROR MKDIS, valor desconocido de parametros "+valores[1]
-			break
+			return respuesta
 		}
 
 		if strings.ToLower(valores[0]) == "id" {
@@ -32,17 +32,16 @@ func MKfs(entrada []string) (string){
 		} else if strings.ToLower(valores[0]) == "type" {
 			if strings.ToLower(valores[1]) != "full" {
 				fmt.Println("MKFS Error. Valor de -type desconocido")
-				respuesta += "MKFS Error. Valor de -type desconocido"
+				respuesta += "MKFS Error. Valor de -type desconocido. "
 				Valido = false
-				break
+				return respuesta
 			}
 	
 		//ERROR EN LOS PARAMETROS LEIDO
 		} else {
 			fmt.Println("MKFS Error: Parametro desconocido: ", valores[0])
-			respuesta += "MKFS Error: Parametro desconocido: " + valores[0]
 			Valido = false
-			break //por si en el camino reconoce algo invalido de una vez se sale
+			return "MKFS Error: Parametro desconocido: " + valores[0] //por si en el camino reconoce algo invalido de una vez se sale
 		}
 		
 	}
@@ -58,24 +57,28 @@ func MKfs(entrada []string) (string){
 			respuesta += "ERROR MKFS ID INCORRECTO"
 			fmt.Println("ERROR MKFS NO SE ENCONTRA EL ID")
 			Valido = false
+			return respuesta
 		}
 	}else{
 		respuesta+= "ERROR: MKFS NO SE INGRESO ID"
 		Valido = false
+		return respuesta
 	}
 
 	if Valido{
 		//Abrir el Disco
 		file, err := Herramientas.OpenFile(pathDico)
 		if err != nil {
-			respuesta += "ERROR REP MBR Open "+ err.Error()		
+			respuesta += "ERROR REP MBR Open "+ err.Error()	
+			return respuesta	
 		}
 
 		//Crgar el mbr
 		var mbr Structs.MBR
 		// Read object from bin file
 		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-			respuesta += "ERROR REP MBR Read "+ err.Error()		
+			respuesta += "ERROR REP MBR Read "+ err.Error()	
+			return respuesta	
 		}
 
 		// Close bin file

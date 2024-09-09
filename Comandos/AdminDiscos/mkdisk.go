@@ -28,7 +28,7 @@ func Mkdisk(entrada []string) string{
 	*/
 	for _,parametro :=range entrada[1:]{
 		//Quitar espacios en blanco
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 
 		//Dividir los parametros entre parametro y valor
 		valores := strings.Split(tmp,"=")
@@ -36,11 +36,12 @@ func Mkdisk(entrada []string) string{
 		if len(valores)!=2{
 			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
 			Valido = false
-			break
+			return "ERROR MKDIS, valor desconocido de parametros "+valores[1]
 		}
 		
 		//********************  SIZE *****************
 		if strings.ToLower(valores[0])=="size"{
+			
 			InitSize = true
 			var err error
 			size, err = strconv.Atoi(valores[1]) //se convierte el valor en un entero
@@ -48,11 +49,11 @@ func Mkdisk(entrada []string) string{
 			if err != nil {
 				fmt.Println("MKDISK Error: -size debe ser un valor numerico. se leyo ", valores[1])
 				Valido = false
-				break
+				return "MKDISK Error: -size debe ser un valor numerico. se leyo "+ valores[1]
 			} else if size <= 0 { //se valida que sea mayor a 0 (positivo)
 				fmt.Println("MKDISK Error: -size debe ser un valor positivo mayor a cero (0). se leyo ", valores[1])
 				Valido = false
-				break
+				return "MKDISK Error: -size debe ser un valor positivo mayor a cero (0). se leyo "+ valores[1]
 			}
 
 		//********************  Fit *****************
@@ -75,7 +76,7 @@ func Mkdisk(entrada []string) string{
 			} else if strings.ToLower(valores[1]) != "m" {
 				fmt.Println("MKDISK Error en -unit. Valores aceptados: k, m. ingreso: ", valores[1])
 				Valido = false
-				break
+				return "MKDISK Error en -unit. Valores aceptados: k, m. ingreso: "+valores[1]
 			}
 
 		//******************* PATH *************
@@ -87,7 +88,7 @@ func Mkdisk(entrada []string) string{
 		} else {
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
 			Valido = false
-			break //por si en el camino reconoce algo invalido de una vez se sale
+			return "MKDISK Error: Parametro desconocido: "+ valores[0] //por si en el camino reconoce algo invalido de una vez se sale
 		}
 	}
 	
@@ -99,11 +100,12 @@ func Mkdisk(entrada []string) string{
 				err := Herramientas.CrearDisco(pathE)
 				if err != nil {
 					fmt.Println("MKDISK Error: ", err)
+					return "MKDISK Error: "+err.Error()
 				}
 				// Open bin file
 				file, err := Herramientas.OpenFile(pathE)
 				if err != nil {
-					return "ERROR"
+					return "MKDISK Error: "+err.Error()
 				}
 
 				datos := make([]byte, tam)

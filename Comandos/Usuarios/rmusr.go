@@ -15,7 +15,7 @@ func Rmusr(entrada []string) string{
 	UsuarioA := Structs.UsuarioActual
 	
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
@@ -41,12 +41,6 @@ func Rmusr(entrada []string) string{
 		}
 	}
 	// ------------ COMPROBACIONES DE PARAMETROS OBLIGATORIOS---------------
-	if user == "" {
-		Valido = false
-		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
-		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
-	}
-
 	if !UsuarioA.Status {
 		Valido = false
 		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
@@ -60,6 +54,12 @@ func Rmusr(entrada []string) string{
 		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
 		return respuesta
 	}
+	
+	if user == "" {
+		Valido = false
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
+	}	
 
 	file, err := Herramientas.OpenFile(UsuarioA.PathD)
 	if err != nil {

@@ -17,14 +17,14 @@ func Mount(entrada []string) (string){
 	Valido := true
 
 	for _, parametro := range entrada[1:] {
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
 			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
 			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
-			break
+			return respuesta
 		}
 
 		//******************* PATH *************
@@ -35,7 +35,7 @@ func Mount(entrada []string) (string){
 				fmt.Println("FDISK Error: El disco no existe")
 				respuesta += "FDISK Error: El disco no existe"
 				Valido = false
-				break // Terminar el bucle porque encontramos un nombre único
+				return respuesta // Terminar el bucle porque encontramos un nombre único
 			}
 		//********************  NAME *****************
 		} else if strings.ToLower(valores[0]) == "name" {
@@ -48,7 +48,7 @@ func Mount(entrada []string) (string){
 		} else {
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
 			respuesta += "MKDISK Error: Parametro desconocido: "+ valores[0]
-			break //por si en el camino reconoce algo invalido de una vez se sale
+			return respuesta //por si en el camino reconoce algo invalido de una vez se sale
 		}
 	}
 
@@ -113,12 +113,13 @@ func Mount(entrada []string) (string){
 								Structs.AddMontadas(id, pathE)
 
 								//TODO modificar la particion que se va a montar								
-								//copy(mbr.Partitions[i].Status[:], "A")
+								copy(mbr.Partitions[i].Status[:], "A")
 								copy(mbr.Partitions[i].Id[:], id)
 
 								//sobreescribir el mbr para guardar los cambios
 								if err := Herramientas.WriteObject(disco, mbr, 0); err != nil { //Sobre escribir el mbr
 									respuesta += "Error "
+									return "Error "+err.Error()
 								}
 								reportar = true
 
@@ -129,7 +130,7 @@ func Mount(entrada []string) (string){
 							}else{
 								fmt.Println("MOUNT Error. No se puede montar una particion extendida")
 								respuesta += "MOUNT Error. No se puede montar una particion extendida"
-								Structs.PrintMBR(mbr)
+								return respuesta								
 							}
 						}
 					}
@@ -140,6 +141,7 @@ func Mount(entrada []string) (string){
 					fmt.Println("MOUNT Error. No se encontro la particion")
 					respuesta += "MOUNT Error. NO SE ENCONTRO LA PARTICION " + name
 					respuesta += "\nNO SE PUDO MONTAR LA PARICION \n"
+					return respuesta
 				}
 
 				if reportar {

@@ -1,0 +1,76 @@
+digraph { 
+node [ shape=none ] 
+TablaReportNodo [ label = < <table border="1"> 
+ <tr>
+  <td bgcolor='darkgreen' COLSPAN="2"> <font color='white'> Reporte SUPERBLOQUE </font> </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_filesystem_type </td> 
+  <td bgcolor='Azure'> EXT2 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_inodes_count </td> 
+  <td bgcolor='#7FC97F'> 959 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_blocks_count </td> 
+  <td bgcolor='Azure'> 2877 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_free_inodes_count </td> 
+  <td bgcolor='#7FC97F'> 957 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_free_blocks_count </td> 
+  <td bgcolor='Azure'> 2875 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_mtime </td> 
+  <td bgcolor='#7FC97F'> 09/09/2024 12:22 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_umtime </td> 
+  <td bgcolor='Azure'> 09/09/2024 12:22 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_mnt_count </td> 
+  <td bgcolor='#7FC97F'> 2 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_magic </td> 
+  <td bgcolor='Azure'> 61267 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_inode_size </td> 
+  <td bgcolor='#7FC97F'> 124 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_block_size </td> 
+  <td bgcolor='Azure'> 64 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_first_ino </td> 
+  <td bgcolor='#7FC97F'> 2 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_first_blo </td> 
+  <td bgcolor='Azure'> 2 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_bm_inode_start </td> 
+  <td bgcolor='#7FC97F'> 614657 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_bm_block_start </td> 
+  <td bgcolor='Azure'> 615616 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='#7FC97F'> S_inode_start </td> 
+  <td bgcolor='#7FC97F'> 618493 </td> 
+ </tr> 
+ <tr>
+  <td bgcolor='Azure'> S_block_start </td> 
+  <td bgcolor='Azure'> 737409 </td> 
+ </tr> 
+</table> > ]
+}

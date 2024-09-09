@@ -8,7 +8,7 @@ import (
 
 func Rmdisk(entrada []string) string{
 	//Quitar espacios en blanco
-	tmp := strings.TrimRight(entrada[1],"")
+	tmp := strings.TrimRight(entrada[1]," ")
 	valores := strings.Split(tmp,"=")
 	var path string
 

@@ -21,7 +21,7 @@ func Mkgrp(entrada []string) string{
 	}
 
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
@@ -30,10 +30,13 @@ func Mkgrp(entrada []string) string{
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
 		}
+		tmp = strings.TrimRight(valores[1],"")
+		valores[1] = tmp
 
 		//********************  NAME *****************
 		if strings.ToLower(valores[0]) == "name" {
-			name = (valores[1])
+			tmp = strings.TrimRight(valores[1],"")
+			name = (tmp)
 			//validar maximo 10 caracteres
 			if len(name) > 10 {
 				fmt.Println("MKGRP ERROR: name debe tener maximo 10 caracteres")

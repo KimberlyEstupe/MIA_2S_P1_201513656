@@ -1,0 +1,124 @@
+#Archivo de Entrada de Calificacion
+#Kimberly JUlissa Estupe Chen
+#201513656
+
+#-------------- CREACION DE DISCOS -------------------
+mkdisk -Size=3000 -unit=K -path="Resultados/Discos/Disco1.mia"
+mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
+mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
+
+mkdisk -size=2 -unit=M -path="Resultados/Discos/mis discos/Disco_4.mia"
+mkdisk -size=3 -unit=M -path="Resultados/Discos/mis discos/Disco_5.mia"
+
+mkdisk -unit=M -path="Resultados/Discos/mis discos/Disco_7.mia" #Error sin size
+mkdisk -size=3 -unit=z -path="Resultados/Discos/mis discos/Disco_5.mia" #Error unit z
+
+#------------- ELIMINAR DISCOS-------------------------
+rmdisk -path="Resultados/Discos/mis discos/Disco_4.mia"
+rmdisk -path="Resultados/Discos/mis discos/Disco8.mia" #Error path incorrecto
+
+#-------------- PARTICIONES ----------------------------
+fdisk -Size=80 -path=Resultados/Discos/Disco1.mia -name=Particion1
+fdisk -Size=100 -path=Resultados/Discos/Disco1.mia -name=par1
+fdisk -Size=200 -path=Resultados/Discos/Disco1.mia -name=par2 -Unit=B
+fdisk -Size=200 -Unit=B -path=Resultados/Discos/Disco1.mia -name=par2 #Error particion mismo nombre
+fdisk -type=L -path=Resultados/Discos/Disco1.mia -name=pFail -size=500
+
+fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=P2 -size=300
+fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=P3 -size=300
+fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=B -name=PL4 -size=400
+fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=B -name=PL5 -size=500
+fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=P6 -size=300
+
+fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part7 -size=150
+fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part8 -type=E -size=150
+fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part9 -size=150
+
+#-------------- MOUNT ---------------------------- carne: 201513656
+mount -path=Resultados/Discos/Disco2.mia -name=P6 #1A
+mount -path=Resultados/Discos/Disco3.mia -name=Part7 #1B
+mount -path=Resultados/Discos/Disco1.mia -name=par1 #1C
+mount -path=Resultados/Discos/Disco2.mia -name=P2 #2A
+mount -path=Resultados/Discos/Disco2.mia -name=ParticionIncorrecta #error
+
+
+#-------------- SISTEMA DE ARCHIVOS -------------------
+mkfs -type=full -id=562A
+mkfs -id=561B
+mkfs -id=561C -type=full
+mkfs -id=561A -type=full
+mkfs -id=561B
+mkfs -id=561A
+mkfs -id=561B -type=tipo #Error type incorrecto
+mkfs -id=561B -type=full
+
+# -------------------- REPORTES DESPUES E FORMATEO ----------------------
+rep -id=562A -path=RepostesTXT/report2A_bmI.txt -name=bm_inode
+rep -id=562A -path=RepostesTXT/report2A_bmB.txt -name=bm_bloc
+
+#-------------------- LOGIN ------------------------------------
+login -user=root -pass=123 -id=562A
+login -user=root -pass=123 -id=562A #Error sesion iniciada
+
+#------------- CREAR GRUPOS ---------------------------
+mkgrp -name=usuarios
+mkgrp -name=usu1
+mkgrp -name=usu2
+mkgrp -name=usu3
+
+mkgrp -name=news
+mkgrp -name=mail
+mkgrp -name=sys
+mkgrp -name=sys #ERROR ya existe este grupo
+
+#------------- Eliminar grupos --------------------
+rmgrp -name=mail
+rmgrp -name=mail #ERROR YA FUE ELIMINADO
+
+# ------------------ Crear usuarios -------------------
+mkusr -user=user1 -pass=pass123 -grp=usu3
+mkusr -user=Usuario2 -pass=pass123 -grp=mail #Error grupo eliminado
+mkusr -user=userP1 -pass=pass123 -grp=usu3
+mkusr -user=userP2 -pass=pass123 -grp=news
+mkusr -user=user3 -pass=pass123 -grp=news
+mkusr -user=usuario4 -pass=pass123 -grp=usu1
+
+#ELIMINANDO USUARIOS------------------------------------------------
+rmusr -user=user1
+rmusr -user=usuario4
+rmusr -user=usuario4 #Error usuario ya eliminado
+
+# LOGOUT -------------------------------------------------
+logout
+
+logout #Error sin inicio de sesion
+
+#--------------------------------------------------------------
+# Pruebas con otros usuarios, estas daran error por no ser usuarios root 
+#--------------------------------------------------------------
+login -user=userP2 -pass=pass123 -id=562A
+mkgrp -name=usu3
+mkgrp -name=usuarios
+mkusr -user=userP1 -pass=p1 -grp=usu3
+logout
+
+#--------------------------- REPORTES ------------------
+rep -id=562A -path=ReportesPNG/DiscoAmbr.png -name=mbr
+rep -id=561B -path=ReportesPNG/DiscoBmbr.png -name=mbr
+rep -id=561C -path=ReportesPNG/DiscoCmbr.pgn -name=mbr
+
+rep -id=561A -path=ReportesPNG/DiscoAdisk.png -name=disk
+rep -id=561B -path=ReportesPNG/DiscoBdisk.png -name=disk
+rep -id=561C -path=ReportesPNG/DiscoCdisk.pgn -name=disk
+
+rep -id=562A -path=ReportesPNG/Disco2_SB.png -name=sb
+rep -id=561B -path=ReportesPNG/DiscoBd_SB.png -name=sb
+rep -id=561C -path=ReportesPNG/DiscoC_SB.pgn -name=sb
+rep -id=561A -path=ReportesPNG/DiscoA_SB.png -name=sb
+
+rep -id=562A -path=RepostesTXT/report2A_bmINEW.txt -name=bm_inode
+rep -id=562A -path=RepostesTXT/report2A_bmBNEW.txt -name=bm_bloc
+
+rep -id=561B -path=RepostesTXT/report1B_bmI.txt -name=bm_inode
+rep -id=561B -path=RepostesTXT/report1B_bmB.txt -name=bm_bloc
+

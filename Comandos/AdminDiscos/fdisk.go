@@ -27,7 +27,7 @@ func Fdisk(entrada []string) string{
 	
 
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
@@ -35,14 +35,14 @@ func Fdisk(entrada []string) string{
 			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]+ "\n"
 			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
-			break
+			return respuesta
 		}
 
 		//********************  SIZE *****************
 		if strings.ToLower(valores[0])=="size"{
 			InitSize = true
 			var err error
-			//size, err = strconv.Atoi(valores[1]) //se convierte el valor en un entero
+			//size, err = strconv.Atoi(tmp) //se convierte el valor en un entero
 			//if err != nil || size <= 0 { //Se manejaria como un solo error
 			size, err = strconv.Atoi(valores[1]) //se convierte el valor en un entero
 			if err != nil {
@@ -58,10 +58,10 @@ func Fdisk(entrada []string) string{
 			} else if strings.ToLower(valores[1]) == "m" {
 				unit = 1048576 //1024*1024
 			} else if strings.ToLower(valores[1]) != "k" {
-				fmt.Println("MKDISK Error en -unit. Valores aceptados: k, m. ingreso: ", valores[1])
+				fmt.Println("MKDISK Error en -unit. Valores aceptados: b, k, m. ingreso: ", valores[1])
 				Valido = false
-				respuesta += "MKDISK Error en -unit. Valores aceptados: k, m. ingreso: " + valores[1]+ "\n"
-				break
+				respuesta += "MKDISK Error en -unit. Valores aceptados: b, k, m. ingreso: " + valores[1]+ "\n"
+				return respuesta
 			}
 
 		//******************* PATH *************
@@ -74,10 +74,10 @@ func Fdisk(entrada []string) string{
 				fmt.Println("FDISK Error: El disco no existe")
 				respuesta +=  "FDISK Error: El disco no existe"+ "\n"
 				Valido = false
-				break // Terminar el bucle porque encontramos un nombre único
+				return respuesta // Terminar el bucle porque encontramos un nombre único
 			}
 		
-		//******************* Type *************
+		//******************* Type *************		
 		} else if strings.ToLower(valores[0]) == "type" {
 			//p esta predeterminado
 			if strings.ToLower(valores[1]) == "e" {
@@ -88,7 +88,7 @@ func Fdisk(entrada []string) string{
 				fmt.Println("FDISK Error en -type. Valores aceptados: e, l, p. ingreso: ", valores[1])
 				respuesta += "FDISK Error en -type. Valores aceptados: e, l, p. ingreso: " + valores[1]+ "\n"
 				Valido = false
-				break
+				return respuesta
 			}
 
 		//********************  Fit *****************
@@ -114,7 +114,7 @@ func Fdisk(entrada []string) string{
 		} else {
 			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
 			respuesta += "MKDISK Error: Parametro desconocido: "+ valores[0]+ "\n"
-			break //por si en el camino reconoce algo invalido de una vez se sale
+			return respuesta //por si en el camino reconoce algo invalido de una vez se sale
 		}
 		
 	}
@@ -128,11 +128,13 @@ func Fdisk(entrada []string) string{
 					fmt.Println("FDISK Error: -size debe ser un valor positivo mayor a cero (0). se leyo ", size)
 					respuesta += "FDISK Error: -size debe ser un valor positivo mayor a cero (0). se leyo " + strconv.Itoa(size)+ "\n"
 					Valido = false
+					return respuesta
 				}
 			} else { //Si sizeValErr es una cadena (por lo que no se pudo dar valor a size)
 				fmt.Println("FDISK Error: -size debe ser un valor numerico. se leyo ", sizeValErr)
 				respuesta +="FDISK Error: -size debe ser un valor numerico. se leyo " + sizeValErr+ "\n"
 				Valido = false
+				return respuesta
 			}
 		}else{
 			fmt.Println("ERROR: FALTO PARAMETRO SIZE")
@@ -178,7 +180,7 @@ func Fdisk(entrada []string) string{
 						fmt.Println("FDISK Error. Ya existe una particion extendida")
 						fmt.Println("FDISK Error. No se puede crear la nueva particion con nombre: ", name)
 						respuesta += "FDISK Error. Ya existe una particion extendida \nFDISK Error. No se puede crear la nueva particion con nombre:  " + name+ "\n"
-						break
+						return respuesta
 					}
 				}
 			}
@@ -192,7 +194,7 @@ func Fdisk(entrada []string) string{
 						fmt.Println("FDISK Error. Ya existe la particion : ", name)
 						fmt.Println("FDISK Error. No se puede crear la nueva particion con nombre: ", name)
 						respuesta += "FDISK Error. Ya existe la particion : " + name + "\nFDISK Error. No se puede crear la nueva particion con nombre: " + name+ "\n"
-						break
+						return respuesta
 					}
 				}
 			}
@@ -226,7 +228,7 @@ func Fdisk(entrada []string) string{
 							//actual = actual.next
 							if err := Herramientas.ReadObject(disco, &actual, int64(actual.Next)); err != nil {
 								respuesta += "Error Read " + err.Error()+ "\n"
-								break
+								return respuesta
 							}
 							if Structs.GetName(string(actual.Name[:])) == name {
 								isName = false
@@ -292,6 +294,7 @@ func Fdisk(entrada []string) string{
 					//Lo podría eliminar pero tendria que modificar en el metodo del ajuste todos los errores para que aparezca el nombre que se intento ingresar como nueva particion
 					fmt.Println("FDISK Error. No se puede crear la nueva particion con nombre: ", name)
 					respuesta += "FDISK Error. No se puede crear la nueva particion con nombre: "+ name
+					return respuesta
 				}
 			
 			// -------------------- INGRESO PARTICIONES LOGICAS----------------
@@ -308,6 +311,7 @@ func Fdisk(entrada []string) string{
 				} else {
 					fmt.Println("FDISK Error. No existe una particion extendida en la cual crear un particion logica")
 					respuesta += "FDISK Error. No existe una particion extendida en la cual crear un particion logica"+ "\n"
+					return respuesta
 				}
 
 				//valido que la particion extendida si exista (podría haber entrado al error que no existe extendida)

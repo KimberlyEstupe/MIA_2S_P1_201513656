@@ -12,6 +12,7 @@ func Rmgrp(entrada []string) string {
 	var respuesta string
 	var name string
 	UsuarioA := Structs.UsuarioActual
+	
 	if !UsuarioA.Status {
 		respuesta += "ERROR RMGRP: NO HAY SECION INICIADA"+ "\n"
 		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR"+ "\n"
@@ -19,7 +20,7 @@ func Rmgrp(entrada []string) string {
 	}
 
 	for _,parametro :=range entrada[1:]{
-		tmp := strings.TrimRight(parametro,"")
+		tmp := strings.TrimRight(parametro," ")
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
