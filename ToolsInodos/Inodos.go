@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func BuscarInodo(idInodo int32, path string, superBloque Structs.Superblock, file *os.File) int32 {
@@ -82,4 +83,18 @@ func buscarIrecursivo(idInodo int32, path []string, iStart int32, bStart int32, 
 	//agregar busqueda en los apuntadores indirectos
 	//i=12 -> simple; i=13 -> doble; i=14 -> triple
 	return -1
+}
+
+func EliminartIlegibles(entrada string) string{
+	// Función de transformación que elimina caracteres no legibles
+	transformFunc := func(r rune) rune {
+		if unicode.IsPrint(r) {
+			return r
+		}
+		return -1
+	}
+
+	// Aplicar la función de transformación a la cadena de entrada
+	salida := strings.Map(transformFunc, entrada)
+	return salida	
 }

@@ -11,6 +11,7 @@ mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
 cat -file1="/users.txt"  -file1="/users.txt"  -file1="/users.txt"
 cat -file1="/home/users.txt"
+rep -id=561A -path=/home/user/reports/report9.txt -path_file_ls=/users.txt -name=file
 
 tengo este texto file1
 y quiero que cada vez que venga file me separe la palabra file del numero y comprobar si la palabra es 'file' u otra palabra

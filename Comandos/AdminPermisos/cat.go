@@ -91,7 +91,7 @@ func Cat(entrada []string) string {
 			return "CAT ERROR. Particion sin formato" + "\n"
 		}
 
-		//buscar el contenido del archivo especificado
+		//buscar el contenido de cada archivo especificado
 		for _, item := range filen {
 			//buscar el inodo que contiene el archivo buscado
 			idInodo := toolsinodos.BuscarInodo(0, item, superBloque, Disco)
@@ -105,7 +105,8 @@ func Cat(entrada []string) string {
 				for _, idBlock := range inodo.I_block {
 					if idBlock != -1 {
 						Herramientas.ReadObject(Disco, &fileBlock, int64(superBloque.S_block_start+(idBlock*int32(binary.Size(Structs.Fileblock{})))))
-						contenido += string(fileBlock.B_content[:])						
+						tmpConvertir := toolsinodos.EliminartIlegibles(string(fileBlock.B_content[:]))
+						contenido += tmpConvertir					
 					}
 				}
 				contenido += "\n"

@@ -3,6 +3,8 @@ package rep
 import (
 	"MIA_2S_P1_201513656/Herramientas"
 	"MIA_2S_P1_201513656/Structs"
+	toolsinodos "MIA_2S_P1_201513656/ToolsInodos"
+	"encoding/binary"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -13,7 +15,7 @@ func Rep(entrada []string) string{
 	var name string //obligatorio Nombre del reporte a generar
 	var path string //obligatorio Nombre que tendrá el reporte
 	var id string   //obligatorio sera el del disco o el de la particion
-	//var rutaFile string	//nombre del archivo o carpeta reporte file/IS
+	var rutaFile string	//nombre del archivo o carpeta reporte file/IS
 	Valido := true 
 
 	for _, parametro := range entrada[1:]{
@@ -33,8 +35,8 @@ func Rep(entrada []string) string{
 			path = strings.ReplaceAll(valores[1], "\"", "")
 		} else if strings.ToLower(valores[0]) == "id" {
 			id = strings.ToUpper(valores[1])
-		} else if strings.ToLower(valores[0]) == "ruta" {
-			//rutaFile = strings.ToLower(tmp[1])
+		} else if strings.ToLower(valores[0]) == "path_file_ls" {
+			rutaFile = strings.ReplaceAll(valores[1], "\"", "")
 		} else {
 			fmt.Println("REP Error: Parametro desconocido: ", valores[0])
 			respuesta+="REP Error: Parametro desconocido: " + valores[0]
@@ -67,6 +69,7 @@ func Rep(entrada []string) string{
 				respuesta += superBloque(path, id)
 			case "file":
 				fmt.Println("reporte file")
+				respuesta += FILE(path, id, rutaFile)
 			case "ls":
 				fmt.Println("reporte ls")
 			default:
@@ -213,7 +216,7 @@ func superBloque (path string, id string) string{
 	//Verifica que se encontro el ID y la Path del disco
 	if pathDico == ""{
 		reportar = false
-		return "ERROR MB_INODE: ID NO ENCONTRADO"
+		return "ERROR REP: ID NO ENCONTRADO"
 	}
 
 	if reportar{
@@ -282,7 +285,7 @@ func BM_inode(path string, id string) string{
 	//Verifica que se encontro el ID y la Path del disco
 	if pathDico == ""{
 		reportar = false
-		return "ERROR MB_INODE: ID NO ENCONTRADO"
+		return "ERROR REP: ID NO ENCONTRADO"
 	}
 
 	if reportar{
@@ -380,7 +383,7 @@ func BM_Bloque (path string, id string) string{
 	//Verifica que se encontro el ID y la Path del disco
 	if pathDico == ""{
 		reportar = false
-		return "ERROR MB_INODE: ID NO ENCONTRADO"
+		return "ERROR REP: ID NO ENCONTRADO"
 	}
 
 	if reportar{
@@ -459,4 +462,97 @@ func BM_Bloque (path string, id string) string{
 	return respuesta
 }
 
+
+func FILE(path string, id string, rutaFile string)string{
+	var respuesta string
+	var pathDico string
+	var contenido string
+	reportar := false
+
+	//BUsca en struck de particiones montadas el id ingresado
+	for _,montado := range Structs.Montadas{
+		if montado.Id == id{
+			pathDico = montado.PathM
+			reportar = true
+		}
+	}
+
+	//Verifica que se encontro el ID y la Path del disco
+	if pathDico == ""{
+		reportar = false
+		return "ERROR REP: ID NO ENCONTRADO"
+	}
+
+	if reportar{
+		//Obtenermos el nombre del reporte que vamos a crear
+		tmp := strings.Split(path, "/")
+		nombre := strings.Split(tmp[len(tmp)-1], ".")[0]
+
+		tmp2 := strings.Split(pathDico, "/")
+		nombreDisco := strings.Split(tmp2[len(tmp2)-1], ".")[0]
+
+		Disco, err := Herramientas.OpenFile(pathDico)
+		if err != nil {
+			return "ERROR REP OPEN FILE "+err.Error()
+		}
+
+		var mbr Structs.MBR
+		// Read object from bin file
+		if err := Herramientas.ReadObject(Disco, &mbr, 0); err != nil {
+			return "ERROR REP READ FILE "+err.Error()
+		}
+
+		// Close bin file
+		defer Disco.Close()
+
+		//Encontrar la particion correcta
+		part := -1
+		for i := 0; i < 4; i++ {		
+			identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
+			if identificador == id {
+				part = i
+				break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
+			}
+		}
+		
+		var superBloque Structs.Superblock
+		var fileBlock Structs.Fileblock
+		errREAD := Herramientas.ReadObject(Disco, &superBloque, int64(mbr.Partitions[part].Start))
+		if errREAD != nil {
+			fmt.Println("REP Error. Particion sin formato")
+			return "REP Error. Particion sin formato"
+		}
+
+		//buscar el inodo que contiene el archivo buscado
+		idInodo := toolsinodos.BuscarInodo(0, rutaFile, superBloque, Disco)
+		var inodo Structs.Inode
+
+		//idInodo: solo puede existir archivos desde el inodo 1 en adelante (-1 no existe, 0 es raiz)
+		if idInodo > 0 {
+			contenido += "Contenido del archivo: '"+rutaFile+"'\n"
+			Herramientas.ReadObject(Disco, &inodo, int64(superBloque.S_inode_start+(idInodo*int32(binary.Size(Structs.Inode{})))))
+			//recorrer los fileblocks del inodo para obtener toda su informacion
+			for _, idBlock := range inodo.I_block {
+				if idBlock != -1 {
+					Herramientas.ReadObject(Disco, &fileBlock, int64(superBloque.S_block_start+(idBlock*int32(binary.Size(Structs.Fileblock{})))))
+					tmpConvertir := toolsinodos.EliminartIlegibles(string(fileBlock.B_content[:]))
+					contenido += tmpConvertir				
+				}
+			}
+			contenido += "\n"
+			
+		} else {
+			fmt.Println("REP ERROR: No se encontro el archivo ", rutaFile)
+			return "REP ERROR: No se encontro el archivo " + rutaFile
+		}
+
+		//reporte requerido
+		carpeta := filepath.Dir(path)//DIr es para obtener el directorio
+		rutaReporte := carpeta + "/" + nombre + ".txt"
+		Herramientas.Reporte(rutaReporte, contenido)
+		respuesta += "Reporte BM_Bloque " + nombre +" creado \n"
+		respuesta += "Pertenece al disco: " + nombreDisco
+	}
+	return respuesta
+}
 
