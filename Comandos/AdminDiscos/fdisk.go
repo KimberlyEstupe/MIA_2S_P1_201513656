@@ -31,8 +31,8 @@ func Fdisk(entrada []string) string{
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
-			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKDIS, valor desconocido de parametros " + valores[1]+ "\n"
+			fmt.Println("ERROR FDISK, valor desconocido de parametros ",valores[1])
+			respuesta += "ERROR FDISK, valor desconocido de parametros " + valores[1]+ "\n"
 			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
@@ -58,9 +58,9 @@ func Fdisk(entrada []string) string{
 			} else if strings.ToLower(valores[1]) == "m" {
 				unit = 1048576 //1024*1024
 			} else if strings.ToLower(valores[1]) != "k" {
-				fmt.Println("MKDISK Error en -unit. Valores aceptados: b, k, m. ingreso: ", valores[1])
+				fmt.Println("FDISK Error en -unit. Valores aceptados: b, k, m. ingreso: ", valores[1])
 				Valido = false
-				respuesta += "MKDISK Error en -unit. Valores aceptados: b, k, m. ingreso: " + valores[1]+ "\n"
+				respuesta += "FDISK Error en -unit. Valores aceptados: b, k, m. ingreso: " + valores[1]+ "\n"
 				return respuesta
 			}
 
@@ -112,8 +112,8 @@ func Fdisk(entrada []string) string{
 		
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
-			fmt.Println("MKDISK Error: Parametro desconocido: ", valores[0])
-			respuesta += "MKDISK Error: Parametro desconocido: "+ valores[0]+ "\n"
+			fmt.Println("FDISK Error: Parametro desconocido: ", valores[0])
+			respuesta += "FDISK Error: Parametro desconocido: "+ valores[0]+ "\n"
 			return respuesta //por si en el camino reconoce algo invalido de una vez se sale
 		}
 		

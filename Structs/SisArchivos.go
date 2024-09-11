@@ -4,6 +4,7 @@ import (
 	"MIA_2S_P1_201513656/Herramientas"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // NOTA: Recordar que los atributos de los struct deben iniciar con mayuscula
@@ -53,7 +54,7 @@ type Content struct {
 }
 
 // Metodo que anula bytes nulos para B_name
-/*func GetB_name(nombre string) string {
+func GetB_name(nombre string) string {
 	posicionNulo := strings.IndexByte(nombre, 0)
 
 	if posicionNulo != -1 {
@@ -67,7 +68,7 @@ type Content struct {
 
 	}
 	return nombre //-1 el nombre no tiene bytes nulos
-}*/
+}
 
 // BLOQUE DE ARCHIVOS
 type Fileblock struct {

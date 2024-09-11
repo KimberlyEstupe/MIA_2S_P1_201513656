@@ -8,8 +8,14 @@ fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
 
 mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
+login -user=root -pass=123 -id=561A
+cat -file1="/users.txt"  -file1="/users.txt"  -file1="/users.txt"
+cat -file1="/home/users.txt"
 
-login -user=root -pass=123 -id=562A
+tengo este texto file1
+y quiero que cada vez que venga file me separe la palabra file del numero y comprobar si la palabra es 'file' u otra palabra
+
+
 mkgrp -name=usuarios
 mkgrp -name=usu1
 mkgrp -name=usu2
@@ -35,3 +41,5 @@ rep -id=561B -path=reports/rInode1.txt -name=bm_inode
 rep -id=561C -path=reports/rBloque.txt -name=bm_bloc
 rep -id=561A -path=reports/rBloque2.txt -name=bm_bloc
 rep -id=561B -path=reports/rBloque1.txt -name=bm_bloc
+
+

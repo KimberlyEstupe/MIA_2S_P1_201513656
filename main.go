@@ -14,6 +14,7 @@ import (
 	Rep "MIA_2S_P1_201513656/Comandos/Rep"
 	AA 	"MIA_2S_P1_201513656/Comandos/AdminSisArchivos"
 	Us  "MIA_2S_P1_201513656/Comandos/Usuarios"
+	PCA	"MIA_2S_P1_201513656/Comandos/AdminPermisos"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -198,6 +199,21 @@ func Analizar(entrada string) (string){
 	}else if strings.ToLower(parametros[0])=="chgrp"{		
 		if len(parametros)>1{			
 			respuesta = Us.Chgrp(parametros)
+		}else{
+			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
+		}
+	
+	// *=======================* PERMISOS DE CARPETAS Y ARHICVOS *============================*
+	}else if strings.ToLower(parametros[0])=="mkfile"{		
+		if len(parametros)>1{			
+			respuesta = PCA.MKfile(parametros)
+		}else{
+			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
+		}
+	
+	}else if strings.ToLower(parametros[0])=="cat"{		
+		if len(parametros)>1{			
+			respuesta = PCA.Cat(parametros)
 		}else{
 			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
 		}

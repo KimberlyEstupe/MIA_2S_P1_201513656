@@ -13,6 +13,20 @@ func Rmusr(entrada []string) string{
 	var user string
 	Valido := true
 	UsuarioA := Structs.UsuarioActual
+
+	if !UsuarioA.Status {
+		Valido = false
+		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
+		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
+		return respuesta
+	}
+
+	if UsuarioA.Nombre != "root" {
+		Valido = false
+		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
+		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
+		return respuesta
+	}
 	
 	for _,parametro :=range entrada[1:]{
 		tmp := strings.TrimRight(parametro," ")
@@ -41,19 +55,7 @@ func Rmusr(entrada []string) string{
 		}
 	}
 	// ------------ COMPROBACIONES DE PARAMETROS OBLIGATORIOS---------------
-	if !UsuarioA.Status {
-		Valido = false
-		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
-		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
-		return respuesta
-	}
-
-	if UsuarioA.Nombre != "root" {
-		Valido = false
-		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
-		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
-		return respuesta
-	}
+	
 	
 	if user == "" {
 		Valido = false
@@ -61,6 +63,7 @@ func Rmusr(entrada []string) string{
 		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
 	}	
 
+	//Abrimos el disco
 	file, err := Herramientas.OpenFile(UsuarioA.PathD)
 	if err != nil {
 		return "RMUSR ERRORSB OPEN FILE "+err.Error()+ "\n"

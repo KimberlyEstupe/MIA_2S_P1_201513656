@@ -141,7 +141,7 @@ func Mkgrp(entrada []string) string{
 			//valido que se haya encontrado un nuevo id
 			if id != -1 {				
 				contenidoActual := string(fileBlock.B_content[:])
-				posicionNulo := strings.IndexByte(contenidoActual, 0)
+				posicionNulo := strings.IndexByte(contenidoActual, 0)			
 				data := fmt.Sprintf("%d,G,%s\n", id, name)
 				//Aseguro que haya al menos un byte libre
 				if posicionNulo != -1 {
@@ -162,6 +162,7 @@ func Mkgrp(entrada []string) string{
 
 						for i, item := range inodo.I_block{
 							//i es el indice en el arreglo inodo.Iblock
+							// DIferencia i/item:  inodo.I_block[i] = item
 							if item == -1 {
 								guardoInfo = false
 								//agrego el apuntador del bloque al inodo

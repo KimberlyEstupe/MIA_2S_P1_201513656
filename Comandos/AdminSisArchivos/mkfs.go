@@ -21,8 +21,8 @@ func MKfs(entrada []string) (string){
 		valores := strings.Split(tmp,"=")
 
 		if len(valores)!=2{
-			fmt.Println("ERROR MKDIS, valor desconocido de parametros ",valores[1])
-			respuesta += "ERROR MKDIS, valor desconocido de parametros "+valores[1]
+			fmt.Println("ERROR MKFS, valor desconocido de parametros ",valores[1])
+			respuesta += "ERROR MKFS, valor desconocido de parametros "+valores[1]
 			return respuesta
 		}
 
@@ -60,7 +60,7 @@ func MKfs(entrada []string) (string){
 			return respuesta
 		}
 	}else{
-		respuesta+= "ERROR: MKFS NO SE INGRESO ID"
+		respuesta+= "ERROR MKFS NO SE INGRESO ID"
 		Valido = false
 		return respuesta
 	}
@@ -69,7 +69,7 @@ func MKfs(entrada []string) (string){
 		//Abrir el Disco
 		file, err := Herramientas.OpenFile(pathDico)
 		if err != nil {
-			respuesta += "ERROR REP MBR Open "+ err.Error()	
+			respuesta += "ERROR MKFS MBR Open "+ err.Error()	
 			return respuesta	
 		}
 
@@ -77,7 +77,7 @@ func MKfs(entrada []string) (string){
 		var mbr Structs.MBR
 		// Read object from bin file
 		if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-			respuesta += "ERROR REP MBR Read "+ err.Error()	
+			respuesta += "ERROR MKFS MBR Read "+ err.Error()	
 			return respuesta	
 		}
 
