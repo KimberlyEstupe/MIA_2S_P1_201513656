@@ -11,7 +11,7 @@ import (
 )
 
 func Cat(entrada []string) string {
-	respuesta := "Comando Cat"
+	respuesta := ""
 	var filen []string
 
 	UsuarioA := Structs.UsuarioActual
@@ -99,7 +99,7 @@ func Cat(entrada []string) string {
 
 			//idInodo: solo puede existir archivos desde el inodo 1 en adelante (-1 no existe, 0 es raiz)
 			if idInodo > 0 {
-				contenido += "Contenido del archivo: '"+item+"'\n"
+				contenido += "\nContenido del archivo: '"+item+"':\n"
 				Herramientas.ReadObject(Disco, &inodo, int64(superBloque.S_inode_start+(idInodo*int32(binary.Size(Structs.Inode{})))))
 				//recorrer los fileblocks del inodo para obtener toda su informacion
 				for _, idBlock := range inodo.I_block {

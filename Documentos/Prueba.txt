@@ -1,6 +1,7 @@
 #git add .
 #git commit -m "comentario"
 #git push origin main
+#pruebasMIA.pdf
 
 #mkdisk
 mkdisk -Size=300 -unit=K -path=Resultados/Discos/Disco1.mia
@@ -9,8 +10,11 @@ fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
 mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
+mkfile -size=15 -path=/home/user/docs/b.txt
+mkfile -size=15 -path=/home/user/docs/a.txt -r
+mkfile -path=/home/user/docs/b.txt -r -cont=/home/kimberly/Documentos/pruebas.txt
+
 cat -file1="/users.txt" 
-rep -id=562A -path=ReportesPNG/DiscoAmbr.png -name=mbr
 
 
 #REPOSTES

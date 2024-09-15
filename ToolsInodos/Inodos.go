@@ -85,7 +85,7 @@ func buscarIrecursivo(idInodo int32, path []string, iStart int32, bStart int32, 
 	return -1
 }
 
-func CreaCarpeta (idInode int32, carpeta string, initSuperBloque int64, disco *os.File)int32{
+func CreaCarpeta(idInode int32, carpeta string, initSuperBloque int64, disco *os.File)int32{
 	var superBloque Structs.Superblock
 	Herramientas.ReadObject(disco, &superBloque, initSuperBloque)
 

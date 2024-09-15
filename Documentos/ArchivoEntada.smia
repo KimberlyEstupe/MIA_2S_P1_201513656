@@ -1,45 +1,46 @@
 #Archivo de Entrada de Calificacion
 #Kimberly JUlissa Estupe Chen
 #201513656
+#/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados
 
 #-------------- CREACION DE DISCOS -------------------
-mkdisk -Size=3000 -unit=K -path="Resultados/Discos/Disco1.mia"
-mkdisk -path=Resultados/Discos/Disco2.mia -Unit=K -size=3000
-mkdisk -size=5 -unit=M -path="Resultados/Discos/Disco3.mia"
+mkdisk -Size=3000 -unit=K -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia"
+mkdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=K -size=3000
+mkdisk -size=5 -unit=M -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco3.mia"
 
-mkdisk -size=2 -unit=M -path="Resultados/Discos/mis discos/Disco_4.mia"
-mkdisk -size=3 -unit=M -path="Resultados/Discos/mis discos/Disco_5.mia"
+mkdisk -size=2 -unit=M -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco_4.mia"
+mkdisk -size=3 -unit=M -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco_5.mia"
 
-mkdisk -unit=M -path="Resultados/Discos/mis discos/Disco_7.mia" #Error sin size
-mkdisk -size=3 -unit=z -path="Resultados/Discos/mis discos/Disco_5.mia" #Error unit z
+mkdisk -unit=M -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco_7.mia" #Error sin size
+mkdisk -size=3 -unit=z -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco_5.mia" #Error unit z
 
 #------------- ELIMINAR DISCOS-------------------------
-rmdisk -path="Resultados/Discos/mis discos/Disco_4.mia"
-rmdisk -path="Resultados/Discos/mis discos/Disco8.mia" #Error path incorrecto
+rmdisk -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco_4.mia"
+rmdisk -path="/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/mis discos/Disco8.mia" #Error path incorrecto
 
 #-------------- PARTICIONES ----------------------------
-fdisk -Size=80 -path=Resultados/Discos/Disco1.mia -name=Particion1
-fdisk -Size=100 -path=Resultados/Discos/Disco1.mia -name=par1
-fdisk -Size=200 -path=Resultados/Discos/Disco1.mia -name=par2 -Unit=B
-fdisk -Size=200 -Unit=B -path=Resultados/Discos/Disco1.mia -name=par2 #Error particion mismo nombre
-fdisk -type=L -path=Resultados/Discos/Disco1.mia -name=pFail -size=500
+fdisk -Size=80 -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=Particion1
+fdisk -Size=100 -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=par1
+fdisk -Size=200 -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=par2 -Unit=B
+fdisk -Size=200 -Unit=B -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=par2 #Error particion mismo nombre
+fdisk -type=L -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=pFail -size=500
 
-fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=P2 -size=300
-fdisk -type=E -path=Resultados/Discos/Disco2.mia -Unit=K -name=P3 -size=300
-fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=B -name=PL4 -size=400
-fdisk -type=L -path=Resultados/Discos/Disco2.mia -Unit=B -name=PL5 -size=500
-fdisk -path=Resultados/Discos/Disco2.mia -Unit=K -name=P6 -size=300
+fdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=K -name=P2 -size=300
+fdisk -type=E -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=K -name=P3 -size=300
+fdisk -type=L -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=B -name=PL4 -size=400
+fdisk -type=L -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=B -name=PL5 -size=500
+fdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -Unit=K -name=P6 -size=300
 
-fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part7 -size=150
-fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part8 -type=E -size=150
-fdisk -path=Resultados/Discos/Disco3.mia -Unit=K -name=Part9 -size=150
+fdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco3.mia -Unit=K -name=Part7 -size=150
+fdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco3.mia -Unit=K -name=Part8 -type=E -size=150
+fdisk -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco3.mia -Unit=K -name=Part9 -size=150
 
 #-------------- MOUNT ---------------------------- carne: 201513656
-mount -path=Resultados/Discos/Disco2.mia -name=P6 #1A
-mount -path=Resultados/Discos/Disco3.mia -name=Part7 #1B
-mount -path=Resultados/Discos/Disco1.mia -name=par1 #1C
-mount -path=Resultados/Discos/Disco2.mia -name=P2 #2A
-mount -path=Resultados/Discos/Disco2.mia -name=ParticionIncorrecta #error
+mount -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -name=P6 #1A
+mount -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco3.mia -name=Part7 #1B
+mount -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco1.mia -name=par1 #1C
+mount -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -name=P2 #2A
+mount -path=/home/kimberly/go/src/2S_2024/MIA_2S_P1_201513656/Resultados/Discos/Disco2.mia -name=ParticionIncorrecta #error
 
 
 #-------------- SISTEMA DE ARCHIVOS -------------------

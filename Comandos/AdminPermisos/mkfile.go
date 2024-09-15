@@ -3,7 +3,9 @@ package adminpermisos
 import (
 	"MIA_2S_P1_201513656/Herramientas"
 	"MIA_2S_P1_201513656/Structs"
+	TI "MIA_2S_P1_201513656/ToolsInodos"
 	"fmt"
+	"io/ioutil"
 	"strconv"
 	"strings"
 )
@@ -12,14 +14,14 @@ func MKfile(entrada []string) string{
 	respuesta := "Comando mkfile"
 	parametrosDesconocidos := false
 	var path string
-	var cont string
-	size := 0 //opcional, si no viene toma valor 0
+	var cont string	//path del archivo que esta en nuestra maquina y se copiara en el usuario utilizado
+	size := 0 		//opcional, si no viene toma valor 0
 	r := false
 	UsuarioA := Structs.UsuarioActual
 
 	if !UsuarioA.Status {
-		fmt.Println("ERROR CAT: SESION NO INICIADA")
-		respuesta += "ERROR CAT: NO HAY SECION INICIADA" + "\n"
+		fmt.Println("ERROR MKFILE: SESION NO INICIADA")
+		respuesta += "ERROR MKFILE: NO HAY SECION INICIADA" + "\n"
 		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
 		return respuesta
 	}
@@ -47,6 +49,7 @@ func MKfile(entrada []string) string{
 					fmt.Println("MKFILE Error: Size solo acepta valores positivos. Ingreso: ", valores[1])
 					return "MKFILE Error: Size solo acepta valores positivos. Ingreso: "+ valores[1]
 				}
+			//-------------- CONT ---------------------
 			}else if strings.ToLower(valores[0]) == "cont"{
 				cont = strings.ReplaceAll(valores[1], "\"", "")
 			}else{
@@ -68,7 +71,7 @@ func MKfile(entrada []string) string{
 			return respuesta //por si en el camino reconoce algo invalido de una vez se sale
 		}
 	}
-	fmt.Println(cont," ", r)
+	
 
 	if path ==""{
 		fmt.Println("MKFIEL ERROR NO SE INGRESO PARAMETRO PATH")
@@ -76,19 +79,19 @@ func MKfile(entrada []string) string{
 	}
 
 	//Abrimos el disco
-	file, err := Herramientas.OpenFile(UsuarioA.PathD)
+	Disco, err := Herramientas.OpenFile(UsuarioA.PathD)
 	if err != nil {
-		return "CAR ERROR OPEN FILE "+err.Error()+ "\n"
+		return "MKFILE ERROR OPEN FILE "+err.Error()+ "\n"
 	}
 
 	var mbr Structs.MBR
 	// Read object from bin file
-	if err := Herramientas.ReadObject(file, &mbr, 0); err != nil {
-		return "CAR ERROR READ FILE "+err.Error()+ "\n"
+	if err := Herramientas.ReadObject(Disco, &mbr, 0); err != nil {
+		return "MKFILE ERROR READ FILE "+err.Error()+ "\n"
 	}
 
 	// Close bin file
-	defer file.Close()
+	defer Disco.Close()
 
 	//Encontrar la particion correcta
 	agregar := false
@@ -104,12 +107,76 @@ func MKfile(entrada []string) string{
 
 	if agregar{
 		var superBloque Structs.Superblock
-		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
+		errREAD := Herramientas.ReadObject(Disco, &superBloque, int64(mbr.Partitions[part].Start))
 		if errREAD != nil {
-			fmt.Println("CAT ERROR. Particion sin formato")
-			return "CAT ERROR. Particion sin formato"+ "\n"
+			fmt.Println("MKFILE ERROR. Particion sin formato")
+			return "MKFILE ERROR. Particion sin formato"+ "\n"
+		}
+
+		//Validar que exista la ruta
+		stepPath := strings.Split(path, "/")
+		finRuta := len(stepPath) - 1 //es el archivo -> stepPath[finRuta] = archivoNuevo.txt
+		idInicial := int32(0)
+		idActual := int32(0)
+		crear := -1
+		//No incluye a finRuta, es decir, se queda en el aterior. EJ: Tamaño=5, finRuta=4. El ultimo que evalua es stepPath[3]
+		for i, itemPath := range stepPath[1:finRuta] {
+			idActual = TI.BuscarInodo(idInicial, "/"+itemPath, superBloque, Disco)
+			//si el actual y el inicial son iguales significa que no existe la carpeta
+			if idInicial != idActual {
+				idInicial = idActual
+			} else {
+				crear = i + 1 //porque estoy iniciando desde 1 e i inicia en 0
+				break
+			}
+		}
+
+		//crear carpetas padre si se tiene permiso
+		if crear != -1 {
+			if r {
+				for _, item := range stepPath[crear:finRuta] {
+					idInicial = TI.CreaCarpeta(idInicial, item, int64(mbr.Partitions[part].Start), Disco)
+					if idInicial == 0 {
+						fmt.Println("MKDIR ERROR: No se pudo crear carpeta")
+						return "MKFILE ERROR: No se pudo crear carpeta"
+					}
+				}
+			} else {
+				fmt.Println("MKDIR ERROR: Carpeta ", stepPath[crear], " no existe. Sin permiso de crear carpetas padre")
+				return "MKFILE ERROR: Carpeta "+ stepPath[crear]+ " no existe. Sin permiso de crear carpetas padre"
+			}
+
+		}
+
+		//verificar que no exista el archivo (recordar que BuscarInodo busca de la forma /nombreBuscar)
+		idNuevo := TI.BuscarInodo(idInicial, "/"+stepPath[finRuta], superBloque, Disco)
+		if idNuevo == idInicial {
+			fmt.Println("Crear el archivo")
+			if cont == "" {
+				fmt.Println("No hay cont")
+			}else{
+				archivoC, err := Herramientas.OpenFile(cont)
+				if err != nil {
+					return "MKFILE ERROR OPEN FILE "+err.Error()+ "\n"
+				}
+
+				//lee el contenido del archivo
+				content, err := ioutil.ReadFile(cont)
+				if err != nil {
+					fmt.Println(err)
+					return "ERROR MKFILE "+err.Error()
+				}
+
+				fmt.Println(string(content))
+			
+				// Close bin file
+				defer archivoC.Close()
+			}
+		}else{
+			fmt.Println("El archivo ya existe")
+			return "El archivo ya existe"
 		}
 	}
-	
 	return respuesta
 }
+

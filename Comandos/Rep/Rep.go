@@ -1,9 +1,9 @@
 package rep
 
 import (
-	"MIA_2S_P1_201513656/Herramientas"
-	"MIA_2S_P1_201513656/Structs"
 	toolsinodos "MIA_2S_P1_201513656/ToolsInodos"
+	"MIA_2S_P1_201513656/Herramientas"
+	"MIA_2S_P1_201513656/Structs"	
 	"encoding/binary"
 	"fmt"
 	"path/filepath"
