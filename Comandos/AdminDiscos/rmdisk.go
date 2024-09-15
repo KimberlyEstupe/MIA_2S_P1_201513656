@@ -37,3 +37,4 @@ func Rmdisk(entrada []string) string{
 	disco := strings.Split(path,"/")
 	return "Disco " + disco[len(disco)-1] + " eliminado "
 }
+

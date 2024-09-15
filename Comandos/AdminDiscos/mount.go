@@ -113,6 +113,7 @@ func Mount(entrada []string) (string){
 								//TODO modificar la particion que se va a montar								
 								//copy(mbr.Partitions[i].Status[:], "A")
 								copy(mbr.Partitions[i].Id[:], id)
+								mbr.Partitions[i].Correlative = int32(contador)
 
 								//sobreescribir el mbr para guardar los cambios
 								if err := Herramientas.WriteObject(disco, mbr, 0); err != nil { //Sobre escribir el mbr
@@ -141,19 +142,23 @@ func Mount(entrada []string) (string){
 				}
 
 				if reportar {
-					fmt.Println("\nLISTA DE PARTICIONES MONTADAS EN ",name,"\n ")
+					partMontadas :="\n\nLISTA DE PARTICIONES MONTADAS EN EL DISCO\n"
 					for i := 0; i < 4; i++ {
 						estado := string(mbr.Partitions[i].Status[:])
 						if estado == "A" {
-							fmt.Printf("Partition %d: name: %s, status: %s, id: %s, tipo: %s, start: %d, size: %d, fit: %s, correlativo: %d\n", i, string(mbr.Partitions[i].Name[:]), string(mbr.Partitions[i].Status[:]), string(mbr.Partitions[i].Id[:]), string(mbr.Partitions[i].Type[:]), mbr.Partitions[i].Start, mbr.Partitions[i].Size, string(mbr.Partitions[i].Fit[:]), mbr.Partitions[i].Correlative)
+							tmpMontadas:= "Particion: " + strconv.Itoa(i) + ", name: " +string(mbr.Partitions[i].Name[:]) + ", status: "+string(mbr.Partitions[i].Status[:])+", id: "+string(mbr.Partitions[i].Id[:])+", tipo: "+string(mbr.Partitions[i].Type[:])+", correlativo: "+ strconv.Itoa(int(mbr.Partitions[i].Correlative)) + ", fit: "+string(mbr.Partitions[i].Fit[:])+ ", start: "+strconv.Itoa(int(mbr.Partitions[i].Start))+ ", size: "+strconv.Itoa(int(mbr.Partitions[i].Size))
+							partMontadas += Herramientas.EliminartIlegibles(tmpMontadas)+"\n"
 						}
 					}
+					
 
-					fmt.Println("/--------------------------------")
-					fmt.Println("PARTICIONES MONTADAS")
+					
+					partMontadas +="\n\n\tPARTICIONES MONTADAS\n"
 					for _,montada := range Structs.Montadas{
-						fmt.Println("Id ", montada.Id, " Paht ", montada)
-					}
+						partMontadas += "Id "+ string(montada.Id)+ ", Disco: "+ montada.PathM+"\n"
+					}					
+					respuesta += partMontadas
+					fmt.Println(partMontadas)
 				}
 			}else{
 				fmt.Println("ERROR: FALTA NAME  EN MOUNT")	
@@ -164,9 +169,6 @@ func Mount(entrada []string) (string){
 			respuesta += "ERROR: FALTA PATH EN MOUNT"	
 		}
 	}
-
-	
-	
 
 	return respuesta
 	

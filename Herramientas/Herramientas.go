@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"unicode"
 )
 
 func CrearDisco(path string) error {
@@ -65,6 +66,23 @@ func ReadObject(file *os.File, data interface{}, position int64) error {
 func DelPartL(size int32) []byte {
 	datos := make([]byte, size)
 	return datos
+}
+
+//Elimina caracteres Ilegibles de una cadena de entrada
+func EliminartIlegibles(entrada string) string{
+	// Función de transformación que elimina caracteres no legibles
+	transformFunc := func(r rune) rune {
+		//unicode.IsPrint indica si es legible o no.
+		//si el caracter se puede leer, lo regresa, de lo contrario devuekve -1
+		if unicode.IsPrint(r) {
+			return r
+		}
+		return -1
+	}
+
+	// Aplicar la función de transformación a la cadena de entrada
+	salida := strings.Map(transformFunc, entrada)
+	return salida	
 }
 
 // probar la escritura de la particion logica

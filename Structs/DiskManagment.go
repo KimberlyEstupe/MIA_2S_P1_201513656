@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 )
-
+ 
 // NOTA: Recordar que los atributos de los struct deben iniciar con mayuscula
 type MBR struct {
 	MbrSize    int32        //mbr_tamano
@@ -62,7 +62,7 @@ func GetName(nombre string) string {
 func (p *Partition) SetInfo(newType string, fit string, newStart int32, newSize int32, name string, correlativo int32) {
 	p.Size = newSize
 	p.Start = newStart
-	p.Correlative = correlativo
+	p.Correlative = 0
 	copy(p.Name[:], name)
 	copy(p.Fit[:], fit)
 	copy(p.Status[:], "I")

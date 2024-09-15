@@ -535,7 +535,7 @@ func FILE(path string, id string, rutaFile string)string{
 			for _, idBlock := range inodo.I_block {
 				if idBlock != -1 {
 					Herramientas.ReadObject(Disco, &fileBlock, int64(superBloque.S_block_start+(idBlock*int32(binary.Size(Structs.Fileblock{})))))
-					tmpConvertir := toolsinodos.EliminartIlegibles(string(fileBlock.B_content[:]))
+					tmpConvertir := Herramientas.EliminartIlegibles(string(fileBlock.B_content[:]))
 					contenido += tmpConvertir				
 				}
 			}

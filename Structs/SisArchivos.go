@@ -53,6 +53,16 @@ type Content struct {
 	B_inodo int32    //apuntador a un inodo asociado al archivo/carpeta
 }
 
+// BLOQUE DE ARCHIVOS
+type Fileblock struct {
+	B_content [64]byte //contenido del archivo
+}
+
+// BLOQUE DE APUNTADORES INDIRECTOS
+type Pointerblock struct {
+	B_pointers [16]int32 //apuntadores a bloques (archivo/carpeta)
+}
+
 // Metodo que anula bytes nulos para B_name
 func GetB_name(nombre string) string {
 	posicionNulo := strings.IndexByte(nombre, 0)
@@ -68,11 +78,6 @@ func GetB_name(nombre string) string {
 
 	}
 	return nombre //-1 el nombre no tiene bytes nulos
-}
-
-// BLOQUE DE ARCHIVOS
-type Fileblock struct {
-	B_content [64]byte //contenido del archivo
 }
 
 // Metodo que anula bytes nulos para B_content PARA EL REPORTE
@@ -96,10 +101,7 @@ type Fileblock struct {
 	return nombre //-1 el nombre no tiene bytes nulos
 }*/
 
-// BLOQUE DE APUNTADORES INDIRECTOS
-type Pointerblock struct {
-	B_pointers [16]int32 //apuntadores a bloques (archivo/carpeta)
-}
+
 
 // para leer byte por byte los bitmaps (reportes)
 type Bite struct {
@@ -138,3 +140,5 @@ func RepSB(particion Partition, disco *os.File) string {
 	
 	return cad
 }
+
+// =========================== REPORTE LS =============================================

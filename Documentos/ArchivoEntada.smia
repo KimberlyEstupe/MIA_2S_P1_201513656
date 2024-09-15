@@ -52,13 +52,14 @@ mkfs -id=561A
 mkfs -id=561B -type=tipo #Error type incorrecto
 mkfs -id=561B -type=full
 
-# -------------------- REPORTES DESPUES E FORMATEO ----------------------
-rep -id=562A -path=RepostesTXT/report2A_bmI.txt -name=bm_inode
-rep -id=562A -path=RepostesTXT/report2A_bmB.txt -name=bm_bloc
 
 #-------------------- LOGIN ------------------------------------
 login -user=root -pass=123 -id=562A
 login -user=root -pass=123 -id=562A #Error sesion iniciada
+
+# -------------------- REPORTES ANTES DE CREAR USUARIOS ----------------------
+rep -id=562A -path=RepostesTXT/report2A_bmI.txt -name=bm_inode
+rep -id=562A -path=RepostesTXT/report2A_bmB.txt -name=bm_bloc
 
 #------------- CREAR GRUPOS ---------------------------
 mkgrp -name=usuarios
@@ -87,6 +88,9 @@ mkusr -user=usuario4 -pass=pass123 -grp=usu1
 rmusr -user=user1
 rmusr -user=usuario4
 rmusr -user=usuario4 #Error usuario ya eliminado
+
+# CAT -----------------------------------------------------
+cat -file1="/users.txt" -file3="/users.txt"
 
 # LOGOUT -------------------------------------------------
 logout
@@ -122,3 +126,5 @@ rep -id=562A -path=RepostesTXT/report2A_bmBNEW.txt -name=bm_bloc
 rep -id=561B -path=RepostesTXT/report1B_bmI.txt -name=bm_inode
 rep -id=561B -path=RepostesTXT/report1B_bmB.txt -name=bm_bloc
 
+rep -id=562A -path=RepostesTXT/File_2A.txt -path_file_ls=/users.txt -name=file
+rep -id=561B -path=RepostesTXT/FIle1B.txt -path_file_ls=/users.txt -name=file

@@ -91,18 +91,18 @@ func MKfile(entrada []string) string{
 	defer file.Close()
 
 	//Encontrar la particion correcta
-	buscar := false
+	agregar := false
 	part := -1 //particion a utilizar y modificar
 	for i := 0; i < 4; i++ {		
 		identificador := Structs.GetId(string(mbr.Partitions[i].Id[:]))
 		if identificador == UsuarioA.IdPart {
 			part = i
-			buscar = true
+			agregar = true
 			break //para que ya no siga recorriendo si ya encontro la particion independientemente si se pudo o no reducir
 		}
 	}
 
-	if buscar{
+	if agregar{
 		var superBloque Structs.Superblock
 		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
 		if errREAD != nil {
