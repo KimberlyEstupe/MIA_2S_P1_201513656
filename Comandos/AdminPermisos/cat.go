@@ -96,28 +96,34 @@ func Cat(entrada []string) string {
 			//buscar el inodo que contiene el archivo buscado
 			idInodo := toolsinodos.BuscarInodo(0, item, superBloque, Disco)
 			var inodo Structs.Inode
-
+			
 			//idInodo: solo puede existir archivos desde el inodo 1 en adelante (-1 no existe, 0 es raiz)
 			if idInodo > 0 {
 				contenido += "\nContenido del archivo: '"+item+"':\n"
 				Herramientas.ReadObject(Disco, &inodo, int64(superBloque.S_inode_start+(idInodo*int32(binary.Size(Structs.Inode{})))))
-				//recorrer los fileblocks del inodo para obtener toda su informacion
-				for _, idBlock := range inodo.I_block {
-					if idBlock != -1 {
-						Herramientas.ReadObject(Disco, &fileBlock, int64(superBloque.S_block_start+(idBlock*int32(binary.Size(Structs.Fileblock{})))))
-						tmpConvertir := Herramientas.EliminartIlegibles(string(fileBlock.B_content[:]))
-						contenido += tmpConvertir					
+				
+				//Verifica que el usuario logiado sea root(root tiene todos los permisos) o que sea el propietario del archivo
+				if inodo.I_uid == UsuarioA.IdUsr || UsuarioA.Nombre=="root"{
+					
+					//recorrer los fileblocks del inodo para obtener toda su informacion
+					for _, idBlock := range inodo.I_block {
+						if idBlock != -1 {
+							Herramientas.ReadObject(Disco, &fileBlock, int64(superBloque.S_block_start+(idBlock*int32(binary.Size(Structs.Fileblock{})))))
+							tmpConvertir := Herramientas.EliminartIlegibles(string(fileBlock.B_content[:]))
+							contenido += tmpConvertir					
+						}
 					}
+					contenido += "\n"
+				}else{
+					contenido += "ERROR CAT: No tiene permisos para visualizar el archivo " + item +"\n"
 				}
-				contenido += "\n"
 				
 			} else {
-				fmt.Println("CAT ERROR: No se encontro el archivo ", item)
-				return "CAT ERROR: No se encontro el archivo " + item
+				contenido += "\nCAT ERROR: No se encontro el archivo " + item +"\n"
 			}
 		}
-		fmt.Println("Contenido ",contenido)
 		respuesta += contenido
+		fmt.Println("Contenido ",contenido)
 	}
 
 	return respuesta

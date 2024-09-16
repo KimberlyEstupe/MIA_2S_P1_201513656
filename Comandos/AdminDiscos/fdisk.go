@@ -100,6 +100,7 @@ func Fdisk(entrada []string) string{
 			}else if strings.ToLower(valores[1])!="wf"{
 				fmt.Println("EEROR: PARAMETRO FIT INCORRECTO. VALORES ACEPTADO: FF, BF,WF. SE INGRESO:",valores[1])
 				respuesta += "EEROR: PARAMETRO FIT INCORRECTO. VALORES ACEPTADO: FF, BF,WF. SE INGRESO:"+valores[1]+ "\n"
+				return respuesta
 			}
 			
 			

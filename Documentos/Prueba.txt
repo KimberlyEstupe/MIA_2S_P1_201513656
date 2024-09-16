@@ -10,11 +10,25 @@ fdisk -Size=100 -fit=WF -path=Resultados/Discos/Disco1.mia -name=Par1
 mount -path=Resultados/Discos/Disco1.mia -name=Par1 #1A
 mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
+
+mkgrp -name=usu1
+mkgrp -name=usu2
+mkgrp -name=usu3
+mkusr -user=user1 -pass=pass123 -grp=usu3
+mkusr -user=userP2 -pass=pass123 -grp=usu2
+
 mkfile -size=15 -path=/home/user/docs/b.txt
 mkfile -size=15 -path=/home/user/docs/a.txt -r
 mkfile -path=/home/user/docs/b.txt -r -cont=/home/kimberly/Documentos/pruebas.txt
 
-cat -file1="/users.txt" 
+logout
+login -user=userP2 -pass=pass123 -id=561A
+mkfile -size=15 -path=/home/user/docs/c.txt -r
+cat -file1="/users.txt" -file5=/home/user/docs/c.txt
+
+logout
+login -user=root -pass=123 -id=561A
+cat -file1="/users.txt" -file5=/home/user/docs/c.txt
 
 
 #REPOSTES
