@@ -122,12 +122,11 @@ func Mkdir(entrada []string) string{
 					fmt.Println("MKDIR ERROR: Sin permiso de crear carpetas padre")
 				}
 			}
-
+			return "Carpeta(s) creada"
 		}else{
 			fmt.Println("MKDIR ERROR: LA CARPETA YA EXISTE")
 			return "MKDIR ERROR: LA CARPETA YA EXISTE"
 		}
 	}
-	fmt.Println(p)
 	return respuesta
 }

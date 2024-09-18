@@ -111,7 +111,7 @@ func Mount(entrada []string) (string){
 								Structs.AddMontadas(id, pathE)
 
 								//TODO modificar la particion que se va a montar								
-								//copy(mbr.Partitions[i].Status[:], "A")
+								copy(mbr.Partitions[i].Status[:], "A")
 								copy(mbr.Partitions[i].Id[:], id)
 								mbr.Partitions[i].Correlative = int32(contador)
 
@@ -124,6 +124,10 @@ func Mount(entrada []string) (string){
 
 								respuesta+="Particion con nombre "+ name+ " montada correctamente. ID: "+id
 								fmt.Println("Particion con nombre ", name, " montada correctamente. ID: ",id)
+							}else{
+								fmt.Println("ERROR MOUNT. ESTA PARTICION YA FUE MONTADA PREVIAMENTE")
+								respuesta += "ERROR MOUNT. ESTA PARTICION YA FUE MONTADA PREVIAMENTE"
+								return respuesta
 							}
 						}else{
 							fmt.Println("ERROR MOUNT. No se puede montar una particion extendida")

@@ -35,7 +35,7 @@ func Mkgrp(entrada []string) string{
 
 		//********************  NAME *****************
 		if strings.ToLower(valores[0]) == "name" {
-			tmp = strings.TrimRight(valores[1],"")
+			tmp = strings.ReplaceAll(valores[1],"\"","")
 			name = (tmp)
 			//validar maximo 10 caracteres
 			if len(name) > 10 {
@@ -199,10 +199,12 @@ func Mkgrp(entrada []string) string{
 
 					
 					fmt.Println("Se ha agregado el grupo '"+name+"' exitosamente. ")
+					respuesta = "Se ha agregado el grupo '"+name+"' exitosamente. "
 					for k:=0; k<len(lineaID)-1; k++{
+						respuesta += string(lineaID[k]) + "\n"
 						fmt.Println(lineaID[k])
 					}
-					return "Se ha agregado el grupo '"+name+"' exitosamente. "
+					return respuesta
 				}
 			}
 		//FIn Add new Usuario

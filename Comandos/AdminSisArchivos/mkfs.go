@@ -263,7 +263,7 @@ func crearEXT2(n int32, particion Structs.Partition, newSuperBloque Structs.Supe
 	data := "1,G,root\n1,U,root,root,123\n" 
 	var fileBlock1 Structs.Fileblock //Bloque1 -> archivo
 	copy(fileBlock1.B_content[:], []byte(data))
-	fmt.Println("Creado user.txt con los datos : \n",data)
+	fmt.Println("Creado users.txt con los datos : \n",data)
 
 	//resumen
 	//Inodo 0 -> Bloque 0 -> Inodo1 -> bloque1 (archivo)

@@ -217,6 +217,13 @@ func Analizar(entrada string) (string){
 		}else{
 			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
 		}
+	
+	}else if strings.ToLower(parametros[0])=="mkdir"{		
+		if len(parametros)>1{			
+			respuesta = PCA.Mkdir(parametros)
+		}else{
+			fmt.Println("ERROR EN RMUSR, FALTAN PARAMETROS")
+		}
 
 	// *============================* OTROS *============================*
 	} else if strings.ToLower(parametros[0]) == "rep" {

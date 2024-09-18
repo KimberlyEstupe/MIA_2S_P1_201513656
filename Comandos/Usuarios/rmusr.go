@@ -170,6 +170,7 @@ func Rmusr(entrada []string) string{
 			respuesta += "El grupo '"+user+"' fue eliminado con extiso"
 			for k:=0; k<len(lineaID)-1; k++{
 				fmt.Println(lineaID[k])
+				respuesta += string(lineaID[k]) + "\n"
 			}
 			return respuesta				
 		}else{

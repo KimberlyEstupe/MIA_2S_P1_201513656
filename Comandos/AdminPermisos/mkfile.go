@@ -160,7 +160,6 @@ func MKfile(entrada []string) string{
 		//verificar que no exista el archivo (recordar que BuscarInodo busca de la forma /nombreBuscar)
 		idNuevo := TI.BuscarInodo(idInicial, "/"+stepPath[finRuta], superBloque, Disco)
 		if idNuevo == idInicial {
-			fmt.Println("Crear el archivo")
 			if cont == "" {
 				digito := 0
 				var content string
@@ -197,7 +196,7 @@ func MKfile(entrada []string) string{
 			}
 		}else{
 			fmt.Println("El archivo ya existe")
-			return "El archivo ya existe"
+			return "ERROR: El archivo ya existe"
 		}
 	}
 	return respuesta

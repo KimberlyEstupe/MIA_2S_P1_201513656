@@ -31,7 +31,6 @@ func Rep(entrada []string) string{
 		if strings.ToLower(valores[0]) == "name" {
 			name = strings.ToLower(valores[1])
 		} else if strings.ToLower(valores[0]) == "path" {
-			valores[1] = "Resultados/"+valores[1]
 			path = strings.ReplaceAll(valores[1], "\"", "")
 		} else if strings.ToLower(valores[0]) == "id" {
 			id = strings.ToUpper(valores[1])

@@ -12,18 +12,15 @@ func Chgrp(entrada []string) string{
 	var respuesta string
 	var user string
 	var grp string
-	Valido := true
 	UsuarioA := Structs.UsuarioActual
 
 	if !UsuarioA.Status {
-		Valido = false
 		respuesta += "ERROR MKUSR: NO HAY SECION INICIADA" + "\n"
 		respuesta += "POR FAVOR INICIAR SESION PARA CONTINUAR" + "\n"
 		return respuesta
 	}
 
 	if UsuarioA.Nombre != "root" {
-		Valido = false
 		fmt.Println("ERROR FALTA DE PERMISOS, NO ES EL USUARIO ROOT")
 		respuesta += "ERROR MKGRO: ESTE USUARIO NO CUENTA CON LOS PERMISOS PARA REALIZAR ESTA ACCION"
 		return respuesta
@@ -36,7 +33,6 @@ func Chgrp(entrada []string) string{
 		if len(valores) != 2 {
 			fmt.Println("ERROR MKGRP, valor desconocido de parametros ", valores[1])
 			respuesta += "ERROR MKGRP, valor desconocido de parametros " + valores[1] + "\n"
-			Valido = false
 			//Si falta el valor del parametro actual lo reconoce como error e interrumpe el proceso
 			return respuesta
 		}
@@ -46,7 +42,6 @@ func Chgrp(entrada []string) string{
 			grp = (valores[1])
 			//validar maximo 10 caracteres
 			if len(grp) > 10 {
-				Valido = false
 				fmt.Println("CHGRP ERROR: grp debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: grp debe tener maximo 10 caracteres"
 			}
@@ -55,13 +50,11 @@ func Chgrp(entrada []string) string{
 			user = valores[1]
 			//validar maximo 10 caracteres
 			if len(user) > 10 {
-				Valido = false
 				fmt.Println("CHGRP ERROR: user debe tener maximo 10 caracteres")
 				return "ERROR MKGRP: user debe tener maximo 10 caracteres"
 			}
 		//******************* ERROR EN LOS PARAMETROS *************
 		} else {
-			Valido = false
 			fmt.Println("CHGRP ERROR: Parametro desconocido: ", valores[0])
 			//por si en el camino reconoce algo invalido de una vez se sale
 			return "CHGRP ERROR: Parametro desconocido: " + valores[0] + "\n"
@@ -70,15 +63,13 @@ func Chgrp(entrada []string) string{
 
 	// ------------ COMPROBACIONES DE PARAMETROS OBLIGATORIOS---------------
 	if user == "" {
-		Valido = false
 		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
 		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
 	}
 
 	if grp == "" {
-		Valido = false
-		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO USER ")
-		return "MKUSR ERROR: FALTO EL PARAMETRO USER " + "\n"
+		fmt.Println("MKUSR ERROR: FALTO EL PARAMETRO GRP ")
+		return "MKUSR ERROR: FALTO EL PARAMETRO GRP " + "\n"
 	}	
 
 	file, err := Herramientas.OpenFile(UsuarioA.PathD)
@@ -107,7 +98,7 @@ func Chgrp(entrada []string) string{
 		}
 	}
 
-	if Valido && continuar{
+	if continuar{
 		var superBloque Structs.Superblock
 		errREAD := Herramientas.ReadObject(file, &superBloque, int64(mbr.Partitions[part].Start))
 		if errREAD != nil {
@@ -131,19 +122,19 @@ func Chgrp(entrada []string) string{
 		
 		lineaID := strings.Split(contenido, "\n")
 		//BUscar si el grupo existe
-		ExGrupo := false
+		NOExGrupo := true
 		for _, registro := range lineaID[:len(lineaID)-1] {
 			datos := strings.Split(registro, ",")
 			//verificamos que el grupo exista
 			if len(datos) == 3 {
 				if datos[2] == grp {
-					ExGrupo = true
+					NOExGrupo = false
 					break
 				}
 			}
 		}
 
-		if !ExGrupo {
+		if NOExGrupo {
 			fmt.Println("NO EXISTE EL GRUPO EN MKURS")
 			return "CHGRP ERROR, NO EXISTE EL GRUPO, POR FAVOR INGRESE UN GRUPO QUE SI EXISTA"
 		}
@@ -205,11 +196,13 @@ func Chgrp(entrada []string) string{
 			respuesta += "El usuario '"+user+"' fue cambiado al grupo '"+grp+"' exitosamente"
 			for k:=0; k<len(lineaID)-1; k++{
 				fmt.Println(lineaID[k])
+				respuesta += string(lineaID[k]) + "\n"
 			}
 			return respuesta
 		}
-
-		
+	}else{
+		fmt.Println("ERROR CHGRP: OCURRIO UN ERROR INESPERADO")
+		return "ERROR CHGRP: OCURRIO UN ERROR INESPERADO"
 	}
 	
 	return respuesta

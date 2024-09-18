@@ -167,6 +167,7 @@ func Rmgrp(entrada []string) string {
 				fmt.Println("El grupo '"+name+"' fue eliminado con extiso")
 				respuesta += "El grupo '"+name+"' fue eliminado con extiso"
 				for k:=0; k<len(lineaID)-1; k++{
+					respuesta += string(lineaID[k]) + "\n"
 					fmt.Println(lineaID[k])
 				}
 				return respuesta

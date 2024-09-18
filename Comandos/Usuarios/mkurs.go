@@ -45,7 +45,7 @@ func Mkusr(entrada []string) string {
 
 		//******************** GRUP *****************
 		if strings.ToLower(valores[0]) == "grp" {
-			grp = (valores[1])
+			grp = strings.ReplaceAll(valores[1],"\"","")
 			//validar maximo 10 caracteres
 			if len(grp) > 10 {
 				Valido = false
@@ -54,7 +54,9 @@ func Mkusr(entrada []string) string {
 			}
 		//********************  USER *****************
 		} else if strings.ToLower(valores[0]) == "user" {
-			user = valores[1]
+			user = strings.ReplaceAll(valores[1],"\"","")
+			tmp1 := strings.TrimRight(user, " ")
+			user = tmp1
 			//validar maximo 10 caracteres
 			if len(user) > 10 {
 				Valido = false
@@ -157,11 +159,12 @@ func Mkusr(entrada []string) string {
 				//verificamos que el grupo exista
 				if len(datos) == 3 {
 					if datos[2] == grp {
-						ExGrupo = true
-						break
+						ExGrupo = true						
 					}
-					//Verificamos que el usuario no exista
-				} else if len(datos) == 5 {
+					
+				} 
+				//Verificamos que el usuario no exista
+				if len(datos) == 5 {
 					if datos[3] == user {
 						fmt.Println("MKUSR ERROR: ESTE USUARIO YA EXISTE")
 						return "MKUSR ERROR: ESTE USUARIO YA EXISTE"
@@ -253,13 +256,21 @@ func Mkusr(entrada []string) string {
 							return "MKUSR ERROR: ESPACIO INSUFICIENTE PARA EL NUEVO USUARIO. "
 						}
 					}
+					fmt.Println("Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. ")
+					respuesta += "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente.\n\n "
+					for k:=0; k<len(lineaID)-1; k++{
+						fmt.Println(lineaID[k])
+						respuesta += string(lineaID[k])+ "\n"
+					}
+					return respuesta
+				}else{
+					respuesta += "ERROR MKUSR NO HAY ESPACIO SUFICIENTE"
+					fmt.Println("ERROR MKUSR NO HAY ESPACIO SUFICIENTE")
 				}
 			}
-			for k:=0; k<len(lineaID)-1; k++{
-				fmt.Println(lineaID[k])
-			}
-			fmt.Println("Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. ")
-			return "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. "
+			
+			
+			return respuesta
 			
 		} //FIn Add new Usuario
 	}
