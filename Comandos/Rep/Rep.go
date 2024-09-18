@@ -60,8 +60,8 @@ func Rep(entrada []string) string{
 			case "bm_inode":
 				fmt.Println("reporte bm_inode")
 				respuesta += BM_inode(path, id)
-			case "bm_bloc":
-				fmt.Println("reporte bm_bloc")
+			case "bm_block":
+				fmt.Println("reporte bm_block")
 				respuesta += BM_Bloque(path, id)
 			case "sb":
 				fmt.Println("reporte sb")

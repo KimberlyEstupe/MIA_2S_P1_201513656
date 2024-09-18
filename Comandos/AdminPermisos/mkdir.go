@@ -33,7 +33,7 @@ func Mkdir(entrada []string) string{
 				return respuesta
 			}			
 			path = strings.ReplaceAll(valores[1],"\"","")
-		} else if strings.ToLower(valores[0]) == "p" {
+		} else if strings.ToLower(valores[0]) == "r" {
 			if len(tmp) != 1 {
 				fmt.Println("MKDIR Error: Valor desconocido del parametro ", valores[0])
 				return "MKDIR Error: Valor desconocido del parametro "+ valores[0]
@@ -89,21 +89,18 @@ func Mkdir(entrada []string) string{
 
 		//Validar que exista la ruta
 		stepPath := strings.Split(path, "/")
-		finRuta := len(stepPath) - 1 //es el archivo -> stepPath[finRuta] = archivoNuevo.txt
-		idInicial := int32(0)
-		idActual := int32(0)
-		crear := -1
-		//No incluye a finRuta, es decir, se queda en el aterior. EJ: Tamaño=5, finRuta=4. El ultimo que evalua es stepPath[3]
-		for i, itemPath := range stepPath[1:finRuta] {
-			idActual = ToolsInodos.BuscarInodo(idInicial, "/"+itemPath, superBloque, Disco)
-			//si el actual y el inicial son iguales significa que no CrearCarpeta la carpeta
-			if idInicial != idActual {
-				idInicial = idActual
-			} else {
-				crear = i + 1 //porque estoy iniciando desde 1 e i inicia en 0
-				break
+			idInicial := int32(0)
+			idActual := int32(0)
+			crear := -1
+			for i, itemPath := range stepPath[1:] {
+				idActual = ToolsInodos.BuscarInodo(idInicial, "/"+itemPath, superBloque, Disco)
+				if idInicial != idActual {
+					idInicial = idActual
+				} else {
+					crear = i + 1 //porque estoy iniciando desde 1 e i inicia en 0
+					break
+				}
 			}
-		}
 
 		//crear carpetas padre si se tiene permiso
 		if crear != -1 {

@@ -196,8 +196,8 @@ cat -file1=/users.txt
 #-----------------15. MKDIR-----------------
 mkdir -path=/bin
 mkdir -path="/home/archivos/archivos 24"
-mkdir -p -path=/home/archivos/user/docs/usac
-mkdir -p -path=/home/archivos/carpeta1/carpeta2/carpeta3/carpeta4/carpeta5
+mkdir -r -path=/home/archivos/user/docs/usac
+mkdir -r -path=/home/archivos/carpeta1/carpeta2/carpeta3/carpeta4/carpeta5
 
 #-----------------8. LOGOUT-----------------
 logout
@@ -214,7 +214,7 @@ mkfile -path=/home/archivos/user/docs/Tarea2.txt -size=768
 #Crear un archivo txt en su Escritorio llamado NAME
 
 # Cambiar la ruta del cont por la del archivo NAME.txt que creo
-mkfile -path=/home/archivos/user/docs/Tarea3.txt -size=10 -cont=/home/kimberly/Calificacion_MIA/kimberly/NAME.txt
+mkfile -path=/home/archivos/user/docs/Tarea3.txt -size=10 -cont=/home/kimberly/Escritorio/kimberly/NAME.txt
 
 #ERROR NO EXISTE RUTA
 mkfile -path="/home/archivos/noexiste/b1.txt"
