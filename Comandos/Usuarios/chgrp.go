@@ -196,7 +196,6 @@ func Chgrp(entrada []string) string{
 			respuesta += "El usuario '"+user+"' fue cambiado al grupo '"+grp+"' exitosamente"
 			for k:=0; k<len(lineaID)-1; k++{
 				fmt.Println(lineaID[k])
-				respuesta += string(lineaID[k]) + "\n"
 			}
 			return respuesta
 		}

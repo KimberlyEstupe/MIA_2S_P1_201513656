@@ -199,9 +199,8 @@ func Mkgrp(entrada []string) string{
 
 					
 					fmt.Println("Se ha agregado el grupo '"+name+"' exitosamente. ")
-					respuesta = "Se ha agregado el grupo '"+name+"' exitosamente. "
+					respuesta = "Se ha agregado el grupo '"+name+"' exitosamente."
 					for k:=0; k<len(lineaID)-1; k++{
-						respuesta += string(lineaID[k]) + "\n"
 						fmt.Println(lineaID[k])
 					}
 					return respuesta

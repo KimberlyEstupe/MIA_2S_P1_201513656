@@ -257,10 +257,9 @@ func Mkusr(entrada []string) string {
 						}
 					}
 					fmt.Println("Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. ")
-					respuesta += "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente.\n\n "
+					respuesta += "Se ha agregado el usuario '"+user+"' al grupo '"+grp+"' exitosamente. "
 					for k:=0; k<len(lineaID)-1; k++{
 						fmt.Println(lineaID[k])
-						respuesta += string(lineaID[k])+ "\n"
 					}
 					return respuesta
 				}else{
