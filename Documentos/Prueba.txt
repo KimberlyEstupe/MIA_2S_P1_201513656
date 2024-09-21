@@ -13,6 +13,10 @@ mount -path=/home/kimberly/Calificacion_MIA/Discos/Disco1.mia -name=Part11
 #-----------------5. MKFS-----------------
 mkfs -type=full -id=561A
 login -user=root -pass=123 -id=561A
+mkfile -size=10 -path=/home/user/a.txt -r
+rep -id=561A -path=/home/kimberly/Calificacion_MIA/Reportes/p4_r1_inode.jpg" -name=inode
+rep -id=561A -path=/home/kimberly/Calificacion_MIA/Reportes/p4_r7_ls.jpg" -path_file_ls=/home/user -name=ls
+
 
 mkdir -path=/home
 mkdir -path=/user/docs/usac

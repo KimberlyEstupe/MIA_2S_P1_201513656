@@ -172,7 +172,6 @@ func MKfile(entrada []string) string{
 					content += strconv.Itoa(digito)
 					digito++
 				}
-				fmt.Println((content))
 				respuesta = crearArchivo(idInicial, stepPath[finRuta], size, content, int64(mbr.Partitions[part].Start), Disco)				
 			}else{
 				archivoC, err := Herramientas.OpenFile(cont)
@@ -186,12 +185,8 @@ func MKfile(entrada []string) string{
 					fmt.Println(err)
 					return "ERROR MKFILE "+err.Error()
 				}
-
-				fmt.Println(string(content))				
-			
 				// Close bin file
 				defer archivoC.Close()
-				size = len(content)
 				respuesta = crearArchivo(idInicial, stepPath[finRuta], size, string(content), int64(mbr.Partitions[part].Start), Disco)
 			}
 		}else{

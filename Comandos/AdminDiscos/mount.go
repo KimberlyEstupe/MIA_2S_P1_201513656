@@ -154,9 +154,7 @@ func Mount(entrada []string) (string){
 							partMontadas += Herramientas.EliminartIlegibles(tmpMontadas)+"\n"
 						}
 					}
-					
 
-					
 					partMontadas +="\n\n\tPARTICIONES MONTADAS\n"
 					for _,montada := range Structs.Montadas{
 						partMontadas += "Id "+ string(montada.Id)+ ", Disco: "+ montada.PathM+"\n"
