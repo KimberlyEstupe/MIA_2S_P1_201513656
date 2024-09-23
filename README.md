@@ -2,7 +2,7 @@
 **Proyecto 1**  
 __2do semestre 2024__
 
-Creacion de un sistema de Archivos Linux.  
+Creacion de un sistema de Archivos EXT2 de Linux.  
 Para la creacion del proyesto se utilizo Go, react y graphviz
 ## Para correr el proyecto
 ```sh
