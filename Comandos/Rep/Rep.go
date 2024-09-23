@@ -652,26 +652,8 @@ func LS(path string, id string, rutaFile string)string{
 						apuntador := folderBlock.B_content[k].B_inodo
 						if apuntador != -1 {
 							pathActual := Structs.GetB_name(string(folderBlock.B_content[k].B_name[:]))
-							//Busco el grupo y el usuario 							
-							usuario:= ""
-							grupo:=""							
-							for m:=0; m<len(lineaID); m++{
-								datos := strings.Split(lineaID[m], ",")
-								if len(datos) == 5 {	
-									us := fmt.Sprintf("%d",inodo.I_uid)													
-									if us== datos[0]{
-										usuario = datos[3]
-									}		
-								}
-								if len(datos) == 3 {	
-									gr := fmt.Sprintf("%d",inodo.I_gid)									
-									if gr== (datos[0]){
-										grupo = datos[2]
-									}		
-								}
-
-							}
-							contenido += InodoLs(pathActual,grupo, usuario, apuntador , superBloque, Disco)
+							
+							contenido += InodoLs(pathActual, lineaID, apuntador , superBloque, Disco)
 						}
 					}					
 				}
@@ -696,13 +678,35 @@ func LS(path string, id string, rutaFile string)string{
 	return respuesta	
 }
 
-			// Nombre,   grupo,			propietario,  no. bloque		superbloque					DIsco
-func InodoLs(name string,grupo string, propietario string,  idInodo int32, superBloque Structs.Superblock, file *os.File)string{
-	var contenido string	
+			// Nombre,   contenia users.txt		no. bloque		superbloque					DIsco
+func InodoLs(name string,lineaID []string,  idInodo int32, superBloque Structs.Superblock, file *os.File)string{
+	var contenido string
+
 	//cargar el inodo a reportar
 	var inodo Structs.Inode
 	Herramientas.ReadObject(file, &inodo, int64(superBloque.S_inode_start+(idInodo*int32(binary.Size(Structs.Inode{})))))
 
+	
+	//Busco el grupo y el usuario 							
+	usuario:= ""
+	grupo:=""							
+	for m:=0; m<len(lineaID); m++{
+		datos := strings.Split(lineaID[m], ",")
+		if len(datos) == 5 {	
+			us := fmt.Sprintf("%d",inodo.I_uid)													
+			if us== datos[0]{
+				usuario = datos[3]
+			}		
+		}
+		if len(datos) == 3 {	
+			gr := fmt.Sprintf("%d",inodo.I_gid)									
+			if gr== (datos[0]){
+				grupo = datos[2]
+			}		
+		}
+
+	}
+	
 	Color := "Pink"
 	tipoArchivo := "Archivo"
 	var permisos string	
@@ -740,7 +744,7 @@ func InodoLs(name string,grupo string, propietario string,  idInodo int32, super
 	permisos = "rw-rw-r--"	
 	contenido += "\n  <tr>"
 	contenido += "\n\t <td bgcolor='"+Color+"'> "+ permisos +"</td>"
-	contenido += fmt.Sprintf("\n\t <td bgcolor='%s'> %s</td>",Color,propietario)
+	contenido += fmt.Sprintf("\n\t <td bgcolor='%s'> %s</td>",Color,usuario)
 	contenido += fmt.Sprintf("\n\t <td bgcolor='%s'> %s</td>",Color,grupo)
 	contenido += fmt.Sprintf("\n\t <td bgcolor='%s'> %d</td>", Color, inodo.I_size)
 	contenido += fmt.Sprintf("\n\t <td bgcolor='%s'> %s </td> ", Color, string(inodo.I_ctime[:]))
