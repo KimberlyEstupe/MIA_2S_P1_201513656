@@ -146,6 +146,14 @@ func Analizar(entrada string) (string){
 			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
 			respuesta = "ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT"
 		}
+	}else if strings.ToLower(parametros[0])=="unmount"{		
+		if len(parametros)>1{			
+			respuesta = AD.Unmoun(parametros)
+			
+		}else{
+			fmt.Println("ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT")
+			respuesta = "ERROR EN MOUNT, FALTAN PARAMETROS EN MOUNT"
+		}
 	
 	// *===================* ADMINISTRACION DE SISTEMA DE ARCHIVOS *======================*
 

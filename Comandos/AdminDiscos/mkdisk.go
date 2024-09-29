@@ -115,7 +115,7 @@ func Mkdisk(entrada []string) string{
 					return "MKDISK Error: " + newErr.Error()
 				}
 
-				//obtener hora para el id
+			//obtener hora para el id
 			ahora := time.Now()
 			//obtener los segundos y minutos
 			//segundos := ahora.Second()

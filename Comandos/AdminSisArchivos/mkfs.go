@@ -28,7 +28,6 @@ func MKfs(entrada []string) (string){
 
 		if strings.ToLower(valores[0]) == "id" {
 			id = strings.ToUpper(valores[1])
-
 		} else if strings.ToLower(valores[0]) == "type" {
 			if strings.ToLower(valores[1]) != "full" {
 				fmt.Println("MKFS Error. Valor de -type desconocido")
